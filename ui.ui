@@ -351,7 +351,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QLabel" name="dice">
     <property name="geometry">
      <rect>
-      <x>330</x>
+      <x>480</x>
       <y>470</y>
       <width>101</width>
       <height>101</height>
