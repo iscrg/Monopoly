@@ -282,10 +282,35 @@ class uiControl():
         def parrot(value):
             ui.parrotEnable(ex, value)
 
-
 def backend():
-    pass
+    check = True
+    while check == True:
+        data = uiControl.readData('Система')
+        if data == '2':
+            uiControl.hide.kapy(False)
+            uiControl.hide.dog(False)
+            check = False
+        elif data == '3':
+            uiControl.hide.kapy(False)
+            uiControl.hide.dog(False)
+            uiControl.hide.gazmanov(False)
+            check =  False
+        elif data == '4':
+            uiControl.hide.kapy(False)
+            uiControl.hide.dog(False)
+            uiControl.hide.gazmanov(False)
+            uiControl.hide.parrot(False)
+            check = False
+        else:
+            uiControl.message('Выберите от 2 до 4 игроков!')
+            continue
+    uiControl.readData('Капибара')
 
+    uiControl.readData('Собака')
+
+    uiControl.readData('Олег Газманов')
+
+    uiControl.readData('Попугай')
 
 def main():
     global ex
