@@ -125,11 +125,8 @@ class ui(QMainWindow):
 
 
     #Dice control
-    def firstDice(self, value):
+    def dice(self, value):
         self.ui.dice1.setPixmap(QtGui.QPixmap(f"img/dice/{value}.png"))
-
-    def secondDice(self, value):
-        self.ui.dice2.setPixmap(QtGui.QPixmap(f"img/dice/{value}.png"))
 
 #Adding signals for edit score tables.
 class Signals(QtCore.QObject):
@@ -259,12 +256,9 @@ class uiControl():
                 finalValue_ = f'</span> {finalValue}</p>'
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
-    class diceValue:
-        def first(value):
+    def diceValue(value):
             ui.firstDice(ex, value)
         
-        def second(value):
-            ui.secondDice(ex, value)
 
     def message(value):
         ui.printMessageEvnt(ex, value)
