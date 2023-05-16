@@ -279,28 +279,40 @@ class uiControl():
 
 def backend():
     check = True
+    players = 0
+    flag_kapy = False
+    flag_dog = False
+    flag_gazmanov = False
+    flag_parrot = False
+    uiControl.message('Введите количество игроков !')
     while check == True:
-        data = uiControl.readData('Система')
-        if data == '2':
+        players = uiControl.readData('Система')
+        if players == '2':
             uiControl.hide.kapy(False)
             uiControl.hide.dog(False)
             uiControl.score.balance.kapy(0,1000)
             uiControl.score.balance.dog(0,1000)
+            flag_kapy = True
+            flag_dog = True
             uiControl.score.status.kapy('Не в игре','В игре')
             uiControl.score.status.dog('Не в игре','В игре')
+
             check = False
-        elif data == '3':
+        elif players == '3':
             uiControl.hide.kapy(False)
             uiControl.hide.dog(False)
             uiControl.hide.gazmanov(False)
             uiControl.score.balance.kapy(0,1000)
             uiControl.score.balance.dog(0,1000)
             uiControl.score.balance.gazmanov(0,1000)
+            flag_kapy = True
+            flag_dog = True
+            flag_gazmanov = True
             uiControl.score.status.kapy('Не в игре','В игре')
             uiControl.score.status.dog('Не в игре','В игре')
             uiControl.score.status.gazmanov('Не в игре','В игре')
             check =  False
-        elif data == '4':
+        elif players == '4':
             uiControl.hide.kapy(False)
             uiControl.hide.dog(False)
             uiControl.hide.gazmanov(False)
@@ -309,6 +321,10 @@ def backend():
             uiControl.score.balance.dog(0,1000)
             uiControl.score.balance.gazmanov(0,1000)
             uiControl.score.balance.parrot(0,1000)
+            flag_kapy = True
+            flag_dog = True
+            flag_gazmanov = True
+            flag_parrot = True
             uiControl.score.status.kapy('Не в игре','В игре')
             uiControl.score.status.dog('Не в игре','В игре')
             uiControl.score.status.gazmanov('Не в игре','В игре')
@@ -317,13 +333,42 @@ def backend():
         else:
             uiControl.message('Выберите от 2 до 4 игроков!')
             continue
-    dice_number = random.randint(1,6)
-    uiControl.diceValue(dice_number)
     #uiControl.readData('Капибара')
     #uiControl.readData('Собака')
     #uiControl.readData('Олег Газманов')
     #uiControl.readData('Попугай')
 
+    if flag_kapy:
+        uiControl.message('Капибара, чтобы кинуть кубик - введите y')
+        decision = uiControl.readData('Система')
+        if decision == 'y':
+            dice_number = random.randint(1,6)
+            uiControl.diceValue(dice_number)
+            uiControl.message('Ваше значение '+str(dice_number))
+
+    if flag_dog:
+        uiControl.message('Опухший пес, чтобы кинуть кубик - введите y')
+        decision = uiControl.readData('Система')
+        if decision == 'y':
+            dice_number = random.randint(1,6)
+            uiControl.diceValue(dice_number)
+            uiControl.message('Ваше значение '+str(dice_number))
+
+    if flag_gazmanov:
+        uiControl.message('Олег Газманов, чтобы кинуть кубик - введите y')
+        decision = uiControl.readData('Система')
+        if decision == 'y':
+            dice_number = random.randint(1,6)
+            uiControl.diceValue(dice_number)
+            uiControl.message('Ваше значение '+str(dice_number))
+            
+    if flag_parrot:
+        uiControl.message('Попуг, чтобы кинуть кубик - введите y')
+        decision = uiControl.readData('Система')
+        if decision == 'y':
+            dice_number = random.randint(1,6)
+            uiControl.diceValue(dice_number)
+            uiControl.message('Ваше значение'+str(dice_number))
 def main():
     global ex
     global dataReadyEvent
