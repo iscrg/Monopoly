@@ -326,13 +326,18 @@ def backend():
         with open('data/events.txt', encoding="utf-8") as file:
             for line in file.readlines():
                 eventsData.append(line.rstrip('\n'))
-        print(eventsData)
 
         pointsData = []
         with open('data/points.txt', encoding="utf-8") as file:
             for line in file.readlines():
                 pointsData.append(line.rstrip('\n'))
-        print(pointsData)
+
+        rentData = []
+        with open('data/rent.txt') as file:
+            for line in file.readlines():
+                p = line.rstrip('\n').split(' ')
+                rentData.append([int(p[0]), int(p[1])])
+
         pass
 
     def fediuk():
