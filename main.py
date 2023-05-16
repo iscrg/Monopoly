@@ -154,105 +154,105 @@ class uiControl():
         return chatData
         
 
-    class move():
-        def kapy(x, y):
+    def move(player, x, y):
+        if player == 'kapy':
             ui.kapyPosEdit(ex, x, y)
-
-        def dog(x, y):
+        
+        elif player == 'dog':
             ui.dogPosEdit(ex, x, y)
-
-        def gazmanov(x, y):
+            
+        elif player == 'gazmanov':
             ui.gazmanovPosEdit(ex, x, y) 
 
-        def parrot(x, y):
-            ui.parrotPosEdit(ex, x, y)
+        elif player == 'parrot':
+            ui.gazmanotPosEdit(ex, x, y)
 
     class score():
         class property():
-            class add():
+            def add(player, value):
 
-                def kapy(value):
+                if player == 'kapy':
                     initValue = '</p></body></html>'
                     finalValue = f'<br />{value}</p></body></html>'
                     ui.kapyTextEditEvnt(ex, initValue, finalValue)
 
-                def dog(value):
+                elif player == 'dog':
                     initValue = '</p></body></html>'
                     finalValue = f'<br />{value}</p></body></html>'
                     ui.dogTextEditEvnt(ex, initValue, finalValue)
 
-                def gazmanov(value):
+                elif player == 'gazmanov':
                     initValue = '</p></body></html>'
                     finalValue = f'<br />{value}</p></body></html>'
                     ui.gazmanovTextEditEvnt(ex, initValue, finalValue)
 
-                def parrot(value):
+                elif player == 'parrot':
                     initValue = '</p></body></html>'
                     finalValue = f'<br />{value}</p></body></html>'
                     ui.parrotTextEditEvnt(ex, initValue, finalValue)
 
 
-            class remove():
+            def remove(player, value):
 
-                def kapy(value):
+                if player == 'kapy':
                     initValue = f'<br />{value}'
                     finalValue = ''
                     ui.kapyTextEditEvnt(ex, initValue, finalValue)
 
-                def dog(value):
+                elif player == 'dog':
                     initValue = f'<br />{value}'
                     finalValue = ''
                     ui.dogTextEditEvnt(ex, initValue, finalValue)
 
-                def gazmanov(value):
+                elif player == 'gazmanov':
                     initValue = f'<br />{value}'
                     finalValue = ''
                     ui.gazmanovTextEditEvnt(ex, initValue, finalValue)
 
-                def parrot(value):
+                elif player == 'parrot':
                     initValue = f'<br />{value}'
                     finalValue = ''
                     ui.parrotTextEditEvnt(ex, initValue, finalValue)
 
 
-        class balance():
-            def kapy(initValue, finalValue):
+        def balance(player, initValue, finalValue):
+            if player == 'kapy':
                 initValue_ = f'>{initValue}<'
                 finalValue_ = f'>{finalValue}<'
                 ui.kapyTextEditEvnt(ex, initValue_, finalValue_)
 
-            def dog(initValue, finalValue):
+            elif player == 'dog':
                 initValue_ = f'>{initValue}<'
                 finalValue_ = f'>{finalValue}<'
                 ui.dogTextEditEvnt(ex, initValue_, finalValue_)
 
-            def gazmanov(initValue, finalValue):
+            elif player == 'gazmanov':
                 initValue_ = f'>{initValue}<'
                 finalValue_ = f'>{finalValue}<'
                 ui.gazmanovTextEditEvnt(ex, initValue_, finalValue_)
 
-            def parrot(initValue, finalValue):
+            elif player == 'parrot':
                 initValue_ = f'>{initValue}<'
                 finalValue_ = f'>{finalValue}<'
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
-        class status():
-            def kapy(initValue, finalValue):
+        def status(player, initValue, finalValue):
+            if player == 'kapy':
                 initValue_ = f'>{initValue}<'
                 finalValue_ = f'>{finalValue}<'
                 ui.kapyTextEditEvnt(ex, initValue_, finalValue_)
 
-            def dog(initValue, finalValue):
+            elif player == 'dog':
                 initValue_ = f'>{initValue}<'
                 finalValue_ = f'>{finalValue}<'
                 ui.dogTextEditEvnt(ex, initValue_, finalValue_)
 
-            def gazmanov(initValue, finalValue):
+            elif player == 'gazmanov':
                 initValue_ = f'>{initValue}<'
                 finalValue_ = f'>{finalValue}<'
                 ui.gazmanovTextEditEvnt(ex, initValue_, finalValue_)
 
-            def parrot(initValue, finalValue):
+            elif player == 'parrot':
                 initValue_ = f'>{initValue}<'
                 finalValue_ = f'>{finalValue}<'
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
@@ -264,62 +264,38 @@ class uiControl():
     def message(value):
         ui.printMessageEvnt(ex, value)
 
-    class hide:
-        def kapy(value):
+    def hide(player, value):
+        if player == 'kapy':
             ui.kapyEnable(ex, value)
 
-        def dog(value):
+        elif player == 'dog':
             ui.dogEnable(ex, value)
 
-        def gazmanov(value):
+        elif player == 'gazmanov':
             ui.gazmanovEnable(ex, value)
 
-        def parrot(value):
+        elif player == 'parrot':
             ui.parrotEnable(ex, value)
 
 def backend():
 
     def vanya():
-        kapyData = {
-            'flag': False,
-            'balance': 0,
-            'status': 'Не в игре',
-            'position': 0,
-            'property': [] #Сюда писать порядковый номер клеток, а не названия буквами
-        }
+        pointGroups = [
+            [2, 4],
+            [3, 12],
+            [5, 16, 23],
+            [6, 8, 9],
+            [11, 14, 15],
+            [17, 18, 20],
+            [22, 24]
+        ]
 
-        dogData = {
-            'flag': False,
-            'balance': 0,
-            'status': 'Не в игре',
-            'position': 0,
-            'property': []
-        }
-
-        gazmanovData = {
-            'flag': False,
-            'balance': 0,
-            'status': 'Не в игре',
-            'position': 0,
-            'property': []
-        }
-
-        parrotData = {
-            'flag': False,
-            'balance': 0,
-            'status': 'Не в игре',
-            'position': 0,
-            'property': []
-        }
-        '''
-        #Example
-        kapyData['flag'] = True
-        kapyData['balance'] = 1234
-        kapyData['position'] = 10
-        kapyData['balance'] = 1234
-        kapyData['property'].append(10)
-        kapyData['property'].remove(15)
-        '''
+        for i in range(7):
+            if player['position'] in pointGroups[i]:
+                if set(pointGroups[i]).issubset(set(kapyData['properties'])):
+                    print(1)
+                    break
+        uiControl.move('kapy', xPos, yPos)
 
     def danya():
         eventsData = []
