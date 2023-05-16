@@ -345,6 +345,23 @@ def backend():
 
     diceMessages = []
 
+    pointPositions = {
+        'kapy': [],
+        'dog': [],
+        'gazmanov': [],
+        'parrot': []
+    }
+
+    for playerName in playerNames:
+        with open(f'pos/{playerName}.txt') as file:
+            for line in file.readlines():
+                line = line.rstrip('\n').split(' ')
+                pointPositions[playerName].append(line)
+
+    with open('data/dicemsg.txt', encoding='utf-8') as file:
+        for line in file.readlines():
+            diceMessages.append(line.rstrip('\n'))
+
     while True:
         uiControl.message('Введите количество игроков от 2 до 4.')
         playersQuantity = uiControl.readData('Игрок')
@@ -366,23 +383,6 @@ def backend():
         break
 
     while True:
-        pointPositions = {
-            'kapy': [],
-            'dog': [],
-            'gazmanov': [],
-            'parrot': []
-        }
-
-        for playerName in playerNames:
-            with open(f'pos/{playerName}.txt') as file:
-                for line in file.readlines():
-                    line = line.rstrip('\n').split(' ')
-                    pointPositions[playerName].append(line)
-
-        with open('data/dicemsg.txt', encoding='utf-8') as file:
-            for line in file.readlines():
-                diceMessages.append(line.rstrip('\n'))
-
         for playerName in playerNames:
             uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "y"')
             decision = uiControl.readData(data[playerName]['name'])
