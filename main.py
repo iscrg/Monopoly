@@ -1,6 +1,7 @@
 import threading
 from time import sleep
 import sys
+import random
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import uic, QtGui, QtCore
 
@@ -316,14 +317,12 @@ def backend():
         else:
             uiControl.message('Выберите от 2 до 4 игроков!')
             continue
-
-    uiControl.readData('Капибара')
-
-    uiControl.readData('Собака')
-
-    uiControl.readData('Олег Газманов')
-
-    uiControl.readData('Попугай')
+    dice_number = random.randint(1,6)
+    uiControl.diceValue(dice_number)
+    #uiControl.readData('Капибара')
+    #uiControl.readData('Собака')
+    #uiControl.readData('Олег Газманов')
+    #uiControl.readData('Попугай')
 
 def main():
     global ex
