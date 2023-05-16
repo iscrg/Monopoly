@@ -216,44 +216,44 @@ class uiControl():
 
         class balance():
             def kapy(initValue, finalValue):
-                initValue_ = f'{initValue}</p>'
-                finalValue_ = f'{finalValue}</p>'
+                initValue_ = f'>{initValue}<'
+                finalValue_ = f'>{finalValue}<'
                 ui.kapyTextEditEvnt(ex, initValue_, finalValue_)
 
             def dog(initValue, finalValue):
-                initValue_ = f'{initValue}</p>'
-                finalValue_ = f'{finalValue}</p>'
+                initValue_ = f'>{initValue}<'
+                finalValue_ = f'>{finalValue}<'
                 ui.dogTextEditEvnt(ex, initValue_, finalValue_)
 
             def gazmanov(initValue, finalValue):
-                initValue_ = f'{initValue}</p>'
-                finalValue_ = f'{finalValue}</p>'
+                initValue_ = f'>{initValue}<'
+                finalValue_ = f'>{finalValue}<'
                 ui.gazmanovTextEditEvnt(ex, initValue_, finalValue_)
 
             def parrot(initValue, finalValue):
-                initValue_ = f'{initValue}</p>'
-                finalValue_ = f'{finalValue}</p>'
+                initValue_ = f'>{initValue}<'
+                finalValue_ = f'>{finalValue}<'
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
         class status():
             def kapy(initValue, finalValue):
-                initValue_ = f'{initValue}<br />'
-                finalValue_ = f'{finalValue}<br />'
+                initValue_ = f'>{initValue}<'
+                finalValue_ = f'>{finalValue}<'
                 ui.kapyTextEditEvnt(ex, initValue_, finalValue_)
 
             def dog(initValue, finalValue):
-                initValue_ = f'{initValue}<br />'
-                finalValue_ = f'{finalValue}<br />'
+                initValue_ = f'>{initValue}<'
+                finalValue_ = f'>{finalValue}<'
                 ui.dogTextEditEvnt(ex, initValue_, finalValue_)
 
             def gazmanov(initValue, finalValue):
-                initValue_ = f'{initValue}<br />'
-                finalValue_ = f' {finalValue}<br />'
+                initValue_ = f'>{initValue}<'
+                finalValue_ = f'>{finalValue}<'
                 ui.gazmanovTextEditEvnt(ex, initValue_, finalValue_)
 
             def parrot(initValue, finalValue):
-                initValue_ = f'{initValue}<br />'
-                finalValue_ = f' {finalValue}<br />'
+                initValue_ = f'>{initValue}<'
+                finalValue_ = f'>{finalValue}<'
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
     def diceValue(value):
