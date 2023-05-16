@@ -347,7 +347,7 @@ p, li { white-space: pre-wrap; }
      <pixmap>img/players/gazmanov.png</pixmap>
     </property>
    </widget>
-   <widget class="QLabel" name="dice">
+   <widget class="QLabel" name="imgDice">
     <property name="geometry">
      <rect>
       <x>480</x>
