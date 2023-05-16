@@ -69,7 +69,9 @@ class ui(QMainWindow):
         self.ui.kapyPlayer.move(x, y)
 
     def kapyTextEdit(self, initValue, finalValue):
+        print(initValue, finalValue)
         html = self.ui.kapyScore.toHtml()
+        print(html)
         html = html.replace(initValue, finalValue)
         self.ui.kapyScore.setHtml(html)
 
@@ -283,17 +285,35 @@ def backend():
         if data == '2':
             uiControl.hide.kapy(False)
             uiControl.hide.dog(False)
+            uiControl.score.balance.kapy(0,1000)
+            uiControl.score.balance.dog(0,1000)
+            uiControl.score.status.kapy('Не в игре','В игре')
+            uiControl.score.status.dog('Не в игре','В игре')
             check = False
         elif data == '3':
             uiControl.hide.kapy(False)
             uiControl.hide.dog(False)
             uiControl.hide.gazmanov(False)
+            uiControl.score.balance.kapy(0,1000)
+            uiControl.score.balance.dog(0,1000)
+            uiControl.score.balance.gazmanov(0,1000)
+            uiControl.score.status.kapy('Не в игре','В игре')
+            uiControl.score.status.dog('Не в игре','В игре')
+            uiControl.score.status.gazmanov('Не в игре','В игре')
             check =  False
         elif data == '4':
             uiControl.hide.kapy(False)
             uiControl.hide.dog(False)
             uiControl.hide.gazmanov(False)
             uiControl.hide.parrot(False)
+            uiControl.score.balance.kapy(0,1000)
+            uiControl.score.balance.dog(0,1000)
+            uiControl.score.balance.gazmanov(0,1000)
+            uiControl.score.balance.parrot(0,1000)
+            uiControl.score.status.kapy('Не в игре','В игре')
+            uiControl.score.status.dog('Не в игре','В игре')
+            uiControl.score.status.gazmanov('Не в игре','В игре')
+            uiControl.score.status.parrot('Не в игре','В игре')
             check = False
         else:
             uiControl.message('Выберите от 2 до 4 игроков!')
