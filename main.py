@@ -128,7 +128,7 @@ class ui(QMainWindow):
 
     #Dice control
     def dice(self, value):
-        self.ui.dice1.setPixmap(QtGui.QPixmap(f"img/dice/{value}.png"))
+        self.ui.imgDice.setPixmap(QtGui.QPixmap(f"img/dice/{value}.png"))
 
 #Adding signals for edit score tables.
 class Signals(QtCore.QObject):
