@@ -278,6 +278,16 @@ class uiControl():
             ui.parrotEnable(ex, value)
 
 def backend():
+
+    def vanya():
+        pass
+
+    def danya():
+        pass
+
+    def fediuk():
+        pass
+
     check = True
     players = 0
     flag_kapy = False
