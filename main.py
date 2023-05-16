@@ -71,7 +71,6 @@ class ui(QMainWindow):
     def kapyTextEdit(self, initValue, finalValue):
         print(initValue, finalValue)
         html = self.ui.kapyScore.toHtml()
-        print(html)
         html = html.replace(initValue, finalValue)
         self.ui.kapyScore.setHtml(html)
 
