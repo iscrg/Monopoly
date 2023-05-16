@@ -21,7 +21,7 @@ class ui(QMainWindow):
         self.ui = uic.loadUi('ui.ui')
         self.ui.show()
 
-        #Hide players and score
+        #Hide playersQuantity and score
         self.ui.pushButton.setEnabled(False)
         self.ui.kapyScore.setHidden(True)
         self.ui.kapyPlayer.setHidden(True)
@@ -40,7 +40,7 @@ class ui(QMainWindow):
         self.sgnl.consoleMessageSgnl.emit(value)
 
     def printMessage(self, value):
-        self.ui.console.append(f'<span style="font-weight:600;"> [Система]</span> {value}')
+        self.ui.console.append(f'<span style="font-weight:600;"> [Сказочные Разработчики]</span> {value}')
 
     #Reading data from chat.
     def buttonEnadle(self):
@@ -165,7 +165,7 @@ class uiControl():
             ui.gazmanovPosEdit(ex, x, y) 
 
         elif player == 'parrot':
-            ui.gazmanotPosEdit(ex, x, y)
+            ui.parrotPosEdit(ex, x, y)
 
     class score():
         class property():
@@ -396,222 +396,112 @@ def backend():
                     uiControl.move.parrot(parrotPos[parrotData['position']+dice_number][0], parrotPos[parrotData['position']+dice_number][1])
                     parrotData['position'] += dice_number 
 
-    check = True
-    players = 0
-    flag_kapy = False
-    flag_dog = False
-    flag_gazmanov = False
-    flag_parrot = False
-    uiControl.message('Введите количество игроков!')
-    while check == True:
-        players = uiControl.readData('Система')
-        if players == '2':
-            uiControl.hide.kapy(False)
-            uiControl.hide.dog(False)
-            uiControl.score.balance.kapy(0,1000)
-            uiControl.score.balance.dog(0,1000)
-            flag_kapy = True
-            flag_dog = True
-            uiControl.score.status.kapy('Не в игре','В игре')
-            uiControl.score.status.dog('Не в игре','В игре')
+    playerNames = ['kapy', 'dog', 'gazmanov', 'parrot']
 
-            check = False
-        elif players == '3':
-            uiControl.hide.kapy(False)
-            uiControl.hide.dog(False)
-            uiControl.hide.gazmanov(False)
-            uiControl.score.balance.kapy(0,1000)
-            uiControl.score.balance.dog(0,1000)
-            uiControl.score.balance.gazmanov(0,1000)
-            flag_kapy = True
-            flag_dog = True
-            flag_gazmanov = True
-            uiControl.score.status.kapy('Не в игре','В игре')
-            uiControl.score.status.dog('Не в игре','В игре')
-            uiControl.score.status.gazmanov('Не в игре','В игре')
-            check =  False
-        elif players == '4':
-            uiControl.hide.kapy(False)
-            uiControl.hide.dog(False)
-            uiControl.hide.gazmanov(False)
-            uiControl.hide.parrot(False)
-            uiControl.score.balance.kapy(0,1000)
-            uiControl.score.balance.dog(0,1000)
-            uiControl.score.balance.gazmanov(0,1000)
-            uiControl.score.balance.parrot(0,1000)
-            flag_kapy = True
-            flag_dog = True
-            flag_gazmanov = True
-            flag_parrot = True
-            uiControl.score.status.kapy('Не в игре','В игре')
-            uiControl.score.status.dog('Не в игре','В игре')
-            uiControl.score.status.gazmanov('Не в игре','В игре')
-            uiControl.score.status.parrot('Не в игре','В игре')
-            check = False
-        else:
-            uiControl.message('Выберите от 2 до 4 игроков!')
+    data = {
+        'kapy': {
+            'name': 'Капибара',
+            'balance': 0,
+            'status': 'Не в игре',
+            'position': 0,
+            'property': [] #Сюда писать порядковый номер клеток, а не названия буквами
+        },
+
+        'dog': {
+            'name': 'Опухший пес',
+            'balance': 0,
+            'status': 'Не в игре',
+            'position': 0,
+            'property': []
+        },
+
+        'gazmanov': {
+            'name': 'Олег Газманов',
+            'balance': 0,
+            'status': 'Не в игре',
+            'position': 0,
+            'property': []
+        },
+
+        'parrot': {
+            'name': 'Попуг',
+            'balance': 0,
+            'status': 'Не в игре',
+            'position': 0,
+            'property': []
+        }
+
+    }
+
+    playersQuantity = 0
+
+    diceMessages = []
+    
+    while True:
+        uiControl.message('Введите количество игроков от 2 до 4.')
+        playersQuantity = uiControl.readData('Игрок')
+
+        try:
+            playersQuantity = int(playersQuantity)
+            if not (2 <= playersQuantity <= 4):
+                continue
+        except:
             continue
-    #uiControl.readData('Капибара')
-    #uiControl.readData('Собака')
-    #uiControl.readData('Олег Газманов')
-    #uiControl.readData('Попугай')
-
-    uiControl.message('Введите количество игроков!')
-    while check == True:
-        players = uiControl.readData('Система')
-        if players == '2':
-            uiControl.hide.kapy(False)
-            uiControl.hide.dog(False)
-            uiControl.score.balance.kapy(0,1000)
-            uiControl.score.balance.dog(0,1000)
-            flag_kapy = True
-            flag_dog = True
-            uiControl.score.status.kapy('Не в игре','В игре')
-            uiControl.score.status.dog('Не в игре','В игре')
-
-            check = False
-        elif players == '3':
-            uiControl.hide.kapy(False)
-            uiControl.hide.dog(False)
-            uiControl.hide.gazmanov(False)
-            uiControl.score.balance.kapy(0,1000)
-            uiControl.score.balance.dog(0,1000)
-            uiControl.score.balance.gazmanov(0,1000)
-            flag_kapy = True
-            flag_dog = True
-            flag_gazmanov = True
-            uiControl.score.status.kapy('Не в игре','В игре')
-            uiControl.score.status.dog('Не в игре','В игре')
-            uiControl.score.status.gazmanov('Не в игре','В игре')
-            check =  False
-        elif players == '4':
-            uiControl.hide.kapy(False)
-            uiControl.hide.dog(False)
-            uiControl.hide.gazmanov(False)
-            uiControl.hide.parrot(False)
-            uiControl.score.balance.kapy(0,1000)
-            uiControl.score.balance.dog(0,1000)
-            uiControl.score.balance.gazmanov(0,1000)
-            uiControl.score.balance.parrot(0,1000)
-            flag_kapy = True
-            flag_dog = True
-            flag_gazmanov = True
-            flag_parrot = True
-            uiControl.score.status.kapy('Не в игре','В игре')
-            uiControl.score.status.dog('Не в игре','В игре')
-            uiControl.score.status.gazmanov('Не в игре','В игре')
-            uiControl.score.status.parrot('Не в игре','В игре')
-            check = False
-        else:
-            uiControl.message('Выберите от 2 до 4 игроков!')
-            continue
-    #uiControl.readData('Капибара')
-    #uiControl.readData('Собака')
-    #uiControl.readData('Олег Газманов')
-    #uiControl.readData('Попугай')
-   
-    kapyData = {
-        'balance': 0,
-        'status': 'Не в игре',
-        'position': 0,
-        'property': [] #Сюда писать порядковый номер клеток, а не названия буквами
-    }
-
-    dogData = {
-        'balance': 0,
-        'status': 'Не в игре',
-        'position': 0,
-        'property': []
-    }
-
-    gazmanovData = {
-        'balance': 0,
-        'status': 'Не в игре',
-        'position': 0,
-        'property': []
-    }
-
-    parrotData = {
-        'balance': 0,
-        'status': 'Не в игре',
-        'position': 0,
-        'property': []
-    }
-    a=1
-    while a==1:
-        kapyPos = []
-        dogPos = []
-        gazmanovPos = []
-        parrotPos = []
-        with open('pos/kapy.txt') as file:
-            for line in file.readlines():
-                kapyPos.append(line.rstrip('\n').split(' '))         
-        with open('pos/dog.txt') as file:
-            for line in file.readlines():
-                dogPos.append(line.rstrip('\n').split(' '))  
-        with open('pos/gazmanov.txt') as file:
-            for line in file.readlines():
-                gazmanovPos.append(line.rstrip('\n').split(' '))
-        with open('pos/parrot.txt') as file:
-            for line in file.readlines():
-                parrotPos.append(line.rstrip('\n').split(' '))
-
-        if flag_kapy:
-            uiControl.message('Капибара, чтобы кинуть кубик - введите "y"')
-            decision = uiControl.readData('Система')
-            if decision == 'y':
-                dice_number = random.randint(1,6)
-                uiControl.diceValue(dice_number)
-                uiControl.message('Ваше значение '+str(dice_number))
-                if kapyData['position'] + dice_number > 23:
-                    kapyData['position'] = dice_number - (24-kapyData['position'])
-                    uiControl.move.kapy(kapyPos[kapyData['position']][0], kapyPos[kapyData['position']][1])
-
-                else:
-                    uiControl.move.kapy(kapyPos[kapyData['position']+dice_number][0], kapyPos[kapyData['position']+dice_number][1])
-                    kapyData['position'] += dice_number 
         
-        if flag_dog:
-            uiControl.message('Опухший пес, чтобы кинуть кубик - введите "y"')
-            decision = uiControl.readData('Система')
+        playerNames = playerNames[:playersQuantity]
+
+        for playerName in playerNames:
+            uiControl.hide(playerName, False)
+            uiControl.score.balance(playerName, 0, 1000)
+            uiControl.score.status(playerName, 'Не в игре', 'В игре')
+
+        break
+
+    while True:
+        pointPositions = {
+            'kapy': [],
+            'dog': [],
+            'gazmanov': [],
+            'parrot': []
+        }
+
+        for playerName in playerNames:
+            with open(f'pos/{playerName}.txt') as file:
+                for line in file.readlines():
+                    pointPositions[playerName].append(line.rstrip('\n').split(' '))
+
+        with open('data/dicemsg.txt', encoding='utf-8') as file:
+            for line in file.readlines():
+                diceMessages.append(line.rstrip('\n'))
+
+
+        for playerName in playerNames:
+            uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "y"')
+            decision = uiControl.readData(data[playerName]['name'])
+
             if decision == 'y':
                 dice_number = random.randint(1,6)
                 uiControl.diceValue(dice_number)
-                uiControl.message('Ваше значение '+str(dice_number))
-                if dogData['position'] + dice_number > 23:
-                    dogData['position'] = dice_number - (24-dogData['position'])
-                    uiControl.move.dog(dogPos[dogData['position']][0], dogPos[dogData['position']][1])
+                uiControl.message(diceMessages[dice_number-1])
+
+                if data[playerName]['position'] + dice_number > 23:
+                    data[playerName]['position'] = dice_number - (24-data[playerName]['position'])
+
+                    xPos = pointPositions[playerName][data[playerName]['position']][0]
+                    yPos = pointPositions[playerName][data[playerName]['position']][1]
+
+                    uiControl.move(playerName, xPos, yPos)
+
                 else:
-                    uiControl.move.dog(dogPos[dogData['position']+dice_number][0], dogPos[dogData['position']+dice_number][1])
-                    dogData['position'] += dice_number 
-  
-        if flag_gazmanov:
-            uiControl.message('Олег Газманов, чтобы кинуть кубик - введите "y"')
-            decision = uiControl.readData('Система')
-            if decision == 'y':
-                dice_number = random.randint(1,6)
-                uiControl.diceValue(dice_number)
-                uiControl.message('Ваше значение '+str(dice_number))
-                if gazmanovData['position'] + dice_number > 23:
-                    gazmanovData['position'] = dice_number - (24-gazmanovData['position'])
-                    uiControl.move.gazmanov(gazmanovPos[gazmanovData['position']][0], gazmanovPos[gazmanovData['position']][1])
-                else:
-                    uiControl.move.gazmanov(gazmanovPos[gazmanovData['position']+dice_number][0], gazmanovPos[gazmanovData['position']+dice_number][1])
-                    gazmanovData['position'] += dice_number 
-                        
-        if flag_parrot:
-            uiControl.message('Попуг, чтобы кинуть кубик - введите "y"')
-            decision = uiControl.readData('Система')
-            if decision == 'y':
-                dice_number = random.randint(1,6)
-                uiControl.diceValue(dice_number)
-                uiControl.message(f'Ваше значение '+str(dice_number))
-                if parrotData['position'] + dice_number > 23:
-                    parrotData['position'] = dice_number - (24-parrotData['position'])
-                    uiControl.move.parrot(parrotPos[parrotData['position']][0], parrotPos[parrotData['position']][1])
-                else:
-                    uiControl.move.parrot(parrotPos[parrotData['position']+dice_number][0], parrotPos[parrotData['position']+dice_number][1])
-                    parrotData['position'] += dice_number 
+                    xPos = pointPositions[playerName][data[playerName]['position']+dice_number][0]
+                    yPos = pointPositions[playerName][data[playerName]['position']+dice_number][1]
+
+                    uiControl.move(playerName, xPos, yPos)
+
+                    data[playerName]['position'] += dice_number 
+        
+        
+
 
 def main():
     global ex
