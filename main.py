@@ -280,7 +280,41 @@ class uiControl():
 def backend():
 
     def vanya():
-        pass
+        kapyData = {
+            'balance': 0,
+            'status': 'Не в игре',
+            'position': 0,
+            'property': [] #Сюда писать порядковый номер клеток, а не названия буквами
+        }
+
+        dogData = {
+            'balance': 0,
+            'status': 'Не в игре',
+            'position': 0,
+            'property': []
+        }
+
+        gazmanovData = {
+            'balance': 0,
+            'status': 'Не в игре',
+            'position': 0,
+            'property': []
+        }
+
+        parrotData = {
+            'balance': 0,
+            'status': 'Не в игре',
+            'position': 0,
+            'property': []
+        }
+        '''
+        #Example
+        kapyData['balance'] = 1234
+        kapyData['status'] = 'в дурке'
+        kapyData['position'] = 10
+        kapyData['property'].append(10)
+        kapyData['property'].remove(10)
+        '''
 
     def danya():
         pass
