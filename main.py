@@ -148,7 +148,6 @@ class uiControl():
         dataReadyEvent.clear()
         ui.buttonEnadle(ex)
         dataReadyEvent.wait()
-        dataReadyEvent.clear()
 
         return chatData
 
@@ -160,7 +159,7 @@ class uiControl():
             ui.dogPosEdit(ex, x, y)
 
         elif player == 'gazmanov':
-            ui.gazmanovPosEdit(ex, x, y) 
+            ui.gazmanovPosEdit(ex, x, y)
 
         elif player == 'parrot':
             ui.parrotPosEdit(ex, x, y)
