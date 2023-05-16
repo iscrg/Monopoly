@@ -281,6 +281,7 @@ def backend():
 
     def vanya():
         kapyData = {
+            'flag': False,
             'balance': 0,
             'status': 'Не в игре',
             'position': 0,
@@ -288,6 +289,7 @@ def backend():
         }
 
         dogData = {
+            'flag': False,
             'balance': 0,
             'status': 'Не в игре',
             'position': 0,
@@ -295,6 +297,7 @@ def backend():
         }
 
         gazmanovData = {
+            'flag': False,
             'balance': 0,
             'status': 'Не в игре',
             'position': 0,
@@ -302,6 +305,7 @@ def backend():
         }
 
         parrotData = {
+            'flag': False,
             'balance': 0,
             'status': 'Не в игре',
             'position': 0,
@@ -309,6 +313,7 @@ def backend():
         }
         '''
         #Example
+        kapyData['flag'] = True
         kapyData['balance'] = 1234
         kapyData['status'] = 'в дурке'
         kapyData['position'] = 10
