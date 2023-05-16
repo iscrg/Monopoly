@@ -321,6 +321,17 @@ def backend():
         '''
 
     def danya():
+        eventsData = []
+        with open('data/events.txt', encoding="utf-8") as file:
+            for line in file.readlines():
+                eventsData.append(line.rstrip('\n'))
+        print(eventsData)
+
+        pointsData = []
+        with open('data/points.txt', encoding="utf-8") as file:
+            for line in file.readlines():
+                pointsData.append(line.rstrip('\n'))
+        print(pointsData)
         pass
 
     def fediuk():
