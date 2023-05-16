@@ -338,6 +338,11 @@ def backend():
                 p = line.rstrip('\n').split(' ')
                 rentData.append([int(p[0]), int(p[1])])
 
+        posmsgPos = []
+        with open('pos/posmsg.txt', encoding="utf-8") as file:
+            for line in file.readlines():
+                 posmsgPos.append(line.rstrip('\n'))
+
         pass
 
     def fediuk():
