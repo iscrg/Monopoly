@@ -280,22 +280,7 @@ class uiControl():
 def backend():
 
     def vanya():
-        pointGroups = [
-            [2, 4],
-            [3, 12],
-            [5, 16, 23],
-            [6, 8, 9],
-            [11, 14, 15],
-            [17, 18, 20],
-            [22, 24]
-        ]
-
-        for i in range(7):
-            if player['position'] in pointGroups[i]:
-                if set(pointGroups[i]).issubset(set(kapyData['properties'])):
-                    print(1)
-                    break
-        uiControl.move('kapy', xPos, yPos)
+        pass
 
     def danya():
         eventsData = []
@@ -322,79 +307,7 @@ def backend():
         pass
 
     def fediuk():
-        kapyPos = []
-        dogPos = []
-        gazmanovPos = []
-        parrotPos = []
-        with open('pos/kapy.txt') as file:
-            for line in file.readlines():
-                kapyPos.append(line.rstrip('\n').split(' '))         
-        with open('pos/dog.txt') as file:
-            for line in file.readlines():
-                dogPos.append(line.rstrip('\n').split(' '))  
-        with open('pos/gazmanov.txt') as file:
-            for line in file.readlines():
-                gazmanovPos.append(line.rstrip('\n').split(' '))
-        with open('pos/parrot.txt') as file:
-            for line in file.readlines():
-                parrotPos.append(line.rstrip('\n').split(' '))
-
-        if flag_kapy:
-            uiControl.message('Капибара, чтобы кинуть кубик - введите "y"')
-            decision = uiControl.readData('Система')
-            if decision == 'y':
-                dice_number = random.randint(1,6)
-                uiControl.diceValue(dice_number)
-                uiControl.message('Ваше значение '+str(dice_number))
-                if kapyData['position'] + dice_number > 23:
-                    kapyData['position'] = dice_number - (24-kapyData['position'])
-                    uiControl.move.kapy(kapyPos[kapyData['position']][0], kapyPos[kapyData['position']][1])
-
-                else:
-                    uiControl.move.kapy(kapyPos[kapyData['position']+dice_number][0], kapyPos[kapyData['position']+dice_number][1])
-                    kapyData['position'] += dice_number 
-        
-        if flag_dog:
-            uiControl.message('Опухший пес, чтобы кинуть кубик - введите "y"')
-            decision = uiControl.readData('Система')
-            if decision == 'y':
-                dice_number = random.randint(1,6)
-                uiControl.diceValue(dice_number)
-                uiControl.message('Ваше значение '+str(dice_number))
-                if dogData['position'] + dice_number > 23:
-                    dogData['position'] = dice_number - (24-dogData['position'])
-                    uiControl.move.dog(dogPos[dogData['position']][0], dogPos[dogData['position']][1])
-                else:
-                    uiControl.move.dog(dogPos[dogData['position']+dice_number][0], dogPos[dogData['position']+dice_number][1])
-                    dogData['position'] += dice_number 
-  
-        if flag_gazmanov:
-            uiControl.message('Олег Газманов, чтобы кинуть кубик - введите "y"')
-            decision = uiControl.readData('Система')
-            if decision == 'y':
-                dice_number = random.randint(1,6)
-                uiControl.diceValue(dice_number)
-                uiControl.message('Ваше значение '+str(dice_number))
-                if gazmanovData['position'] + dice_number > 23:
-                    gazmanovData['position'] = dice_number - (24-gazmanovData['position'])
-                    uiControl.move.gazmanov(gazmanovPos[gazmanovData['position']][0], gazmanovPos[gazmanovData['position']][1])
-                else:
-                    uiControl.move.gazmanov(gazmanovPos[gazmanovData['position']+dice_number][0], gazmanovPos[gazmanovData['position']+dice_number][1])
-                    gazmanovData['position'] += dice_number 
-                        
-        if flag_parrot:
-            uiControl.message('Попуг, чтобы кинуть кубик - введите "y"')
-            decision = uiControl.readData('Система')
-            if decision == 'y':
-                dice_number = random.randint(1,6)
-                uiControl.diceValue(dice_number)
-                uiControl.message(f'Ваше значение '+str(dice_number))
-                if parrotData['position'] + dice_number > 23:
-                    parrotData['position'] = dice_number - (24-parrotData['position'])
-                    uiControl.move.parrot(parrotPos[parrotData['position']][0], parrotPos[parrotData['position']][1])
-                else:
-                    uiControl.move.parrot(parrotPos[parrotData['position']+dice_number][0], parrotPos[parrotData['position']+dice_number][1])
-                    parrotData['position'] += dice_number 
+        pass
 
     playerNames = ['kapy', 'dog', 'gazmanov', 'parrot']
 
