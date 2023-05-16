@@ -40,7 +40,7 @@ class ui(QMainWindow):
         self.sgnl.consoleMessageSgnl.emit(value)
 
     def printMessage(self, value):
-        self.ui.console.append(f'<span style="font-weight:600;"> [Сказочные Разработчики]</span> {value}')
+        self.ui.console.append(f'<span style="font-weight:600;font-size:12pt;"> [Сказочные Разработчики]</span> <span style="font-size:12pt;">{value}</span>')
 
     # Reading data from chat.
     def buttonEnadle(self):
@@ -54,7 +54,7 @@ class ui(QMainWindow):
 
         player = CurrentPlayer
 
-        self.ui.console.append(f'<span style="font-weight:600;"> [{player}]</span> {self.ui.inputLine.text()}')
+        self.ui.console.append(f'<span style="font-weight:600;font-size:12pt;"> [{player}]</span> <span style="font-size:12pt;">{self.ui.inputLine.text()}</span>')
         chatData = self.ui.inputLine.text()
         dataReadyEvent.set()
 
