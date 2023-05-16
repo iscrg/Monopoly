@@ -1,15 +1,15 @@
 import threading
-from time import sleep
 import sys
 import random
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import uic, QtGui, QtCore
 
+
 class ui(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        #Connect to signals
+        # Connect to signals
         self.sgnl = Signals()
         self.sgnl.kapyTextEditSgnl.connect(self.kapyTextEdit)
         self.sgnl.dogTextEditSgnl.connect(self.dogTextEdit)
@@ -17,11 +17,11 @@ class ui(QMainWindow):
         self.sgnl.parrotTextEditSgnl.connect(self.parrotTextEdit)
         self.sgnl.consoleMessageSgnl.connect(self.printMessage)
 
-        #Start UI
+        # Start UI
         self.ui = uic.loadUi('ui.ui')
         self.ui.show()
 
-        #Hide playersQuantity and score
+        # Hide playersQuantity and score
         self.ui.pushButton.setEnabled(False)
         self.ui.kapyScore.setHidden(True)
         self.ui.kapyPlayer.setHidden(True)
@@ -32,17 +32,17 @@ class ui(QMainWindow):
         self.ui.parrotScore.setHidden(True)
         self.ui.parrotPlayer.setHidden(True)
 
-        #Connect to button
+        # Connect to button
         self.ui.pushButton.clicked.connect(self.readValue)
 
-    #Printing message
+    # Printing message
     def printMessageEvnt(self, value):
         self.sgnl.consoleMessageSgnl.emit(value)
 
     def printMessage(self, value):
         self.ui.console.append(f'<span style="font-weight:600;"> [Сказочные Разработчики]</span> {value}')
 
-    #Reading data from chat.
+    # Reading data from chat.
     def buttonEnadle(self):
         self.ui.pushButton.setEnabled(True)
 
@@ -58,7 +58,7 @@ class ui(QMainWindow):
         chatData = self.ui.inputLine.text()
         dataReadyEvent.set()
 
-    #Kapy control
+    # Kapy control
     def kapyEnable(self, value):
         self.ui.kapyScore.setHidden(value)
         self.ui.kapyPlayer.setHidden(value)
@@ -74,7 +74,7 @@ class ui(QMainWindow):
         html = html.replace(initValue, finalValue)
         self.ui.kapyScore.setHtml(html)
 
-    #Dog control
+    # Dog control
     def dogEnable(self, value):
         self.ui.dogScore.setHidden(value)
         self.ui.dogPlayer.setHidden(value)
@@ -90,8 +90,7 @@ class ui(QMainWindow):
         html = html.replace(initValue, finalValue)
         self.ui.dogScore.setHtml(html)
 
-
-    #Gazmanov control
+    # Gazmanov control
     def gazmanovEnable(self, value):
         self.ui.gazmanovScore.setHidden(value)
         self.ui.gazmanovPlayer.setHidden(value)
@@ -107,8 +106,7 @@ class ui(QMainWindow):
         html = html.replace(initValue, finalValue)
         self.ui.gazmanovScore.setHtml(html)
 
-
-    #Parrot control
+    # Parrot control
     def parrotEnable(self, value):
         self.ui.parrotScore.setHidden(value)
         self.ui.parrotPlayer.setHidden(value)
@@ -124,12 +122,12 @@ class ui(QMainWindow):
         html = html.replace(initValue, finalValue)
         self.ui.parrotScore.setHtml(html)
 
-
-    #Dice control
+    # Dice control
     def dice(self, value):
         self.ui.imgDice.setPixmap(QtGui.QPixmap(f"img/dice/{value}.png"))
 
-#Adding signals for edit score tables.
+
+# Adding signals for edit score tables.
 class Signals(QtCore.QObject):
     kapyTextEditSgnl = QtCore.pyqtSignal(str, str)
     dogTextEditSgnl = QtCore.pyqtSignal(str, str)
@@ -137,7 +135,8 @@ class Signals(QtCore.QObject):
     parrotTextEditSgnl = QtCore.pyqtSignal(str, str)
     consoleMessageSgnl = QtCore.pyqtSignal(str)
 
-#Class for controlling UI.
+
+# Class for controlling UI.
 class uiControl():
     def readData(player):
         global chatData
@@ -152,15 +151,14 @@ class uiControl():
         dataReadyEvent.clear()
 
         return chatData
-        
 
     def move(player, x, y):
         if player == 'kapy':
             ui.kapyPosEdit(ex, x, y)
-        
+
         elif player == 'dog':
             ui.dogPosEdit(ex, x, y)
-            
+
         elif player == 'gazmanov':
             ui.gazmanovPosEdit(ex, x, y) 
 
@@ -191,7 +189,6 @@ class uiControl():
                     finalValue = f'<br />{value}</p></body></html>'
                     ui.parrotTextEditEvnt(ex, initValue, finalValue)
 
-
             def remove(player, value):
 
                 if player == 'kapy':
@@ -213,7 +210,6 @@ class uiControl():
                     initValue = f'<br />{value}'
                     finalValue = ''
                     ui.parrotTextEditEvnt(ex, initValue, finalValue)
-
 
         def balance(player, initValue, finalValue):
             if player == 'kapy':
@@ -258,8 +254,7 @@ class uiControl():
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
     def diceValue(value):
-            ui.dice(ex, value)
-        
+        ui.dice(ex, value)
 
     def message(value):
         ui.printMessageEvnt(ex, value)
@@ -276,6 +271,7 @@ class uiControl():
 
         elif player == 'parrot':
             ui.parrotEnable(ex, value)
+
 
 def backend():
 
@@ -317,7 +313,7 @@ def backend():
             'balance': 0,
             'status': 'Не в игре',
             'position': 0,
-            'property': [] #Сюда писать порядковый номер клеток, а не названия буквами
+            'property': []
         },
 
         'dog': {
@@ -349,7 +345,7 @@ def backend():
     playersQuantity = 0
 
     diceMessages = []
-    
+
     while True:
         uiControl.message('Введите количество игроков от 2 до 4.')
         playersQuantity = uiControl.readData('Игрок')
@@ -360,7 +356,7 @@ def backend():
                 continue
         except:
             continue
-        
+
         playerNames = playerNames[:playersQuantity]
 
         for playerName in playerNames:
@@ -381,39 +377,41 @@ def backend():
         for playerName in playerNames:
             with open(f'pos/{playerName}.txt') as file:
                 for line in file.readlines():
-                    pointPositions[playerName].append(line.rstrip('\n').split(' '))
+                    line = line.rstrip('\n').split(' ')
+                    pointPositions[playerName].append(line)
 
         with open('data/dicemsg.txt', encoding='utf-8') as file:
             for line in file.readlines():
                 diceMessages.append(line.rstrip('\n'))
-
 
         for playerName in playerNames:
             uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "y"')
             decision = uiControl.readData(data[playerName]['name'])
 
             if decision == 'y':
-                dice_number = random.randint(1,6)
+                dice_number = random.randint(1, 6)
                 uiControl.diceValue(dice_number)
                 uiControl.message(diceMessages[dice_number-1])
 
-                if data[playerName]['position'] + dice_number > 23:
-                    data[playerName]['position'] = dice_number - (24-data[playerName]['position'])
+                playerPos = data[playerName]['position']
 
-                    xPos = pointPositions[playerName][data[playerName]['position']][0]
-                    yPos = pointPositions[playerName][data[playerName]['position']][1]
+                if playerPos + dice_number > 23:
+                    playerPos = dice_number - (24-playerPos)
+
+                    xPos = pointPositions[playerName][playerPos][0]
+                    yPos = pointPositions[playerName][playerPos][1]
 
                     uiControl.move(playerName, xPos, yPos)
 
                 else:
-                    xPos = pointPositions[playerName][data[playerName]['position']+dice_number][0]
-                    yPos = pointPositions[playerName][data[playerName]['position']+dice_number][1]
+                    playerPos += dice_number
+
+                    xPos = pointPositions[playerName][playerPos][0]
+                    yPos = pointPositions[playerName][playerPos][1]
 
                     uiControl.move(playerName, xPos, yPos)
 
-                    data[playerName]['position'] += dice_number 
-        
-        
+                data[playerName]['position'] = playerPos
 
 
 def main():
