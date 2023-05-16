@@ -315,7 +315,6 @@ def backend():
         #Example
         kapyData['flag'] = True
         kapyData['balance'] = 1234
-        kapyData['status'] = 'в дурке'
         kapyData['position'] = 10
         kapyData['property'].append(10)
         kapyData['property'].remove(10)
