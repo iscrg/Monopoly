@@ -316,8 +316,9 @@ def backend():
         kapyData['flag'] = True
         kapyData['balance'] = 1234
         kapyData['position'] = 10
+        kapyData['balance'] = 1234
         kapyData['property'].append(10)
-        kapyData['property'].remove(10)
+        kapyData['property'].remove(15)
         '''
 
     def danya():
