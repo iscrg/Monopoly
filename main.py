@@ -69,7 +69,6 @@ class ui(QMainWindow):
         self.ui.kapyPlayer.move(x, y)
 
     def kapyTextEdit(self, initValue, finalValue):
-        print(initValue, finalValue)
         html = self.ui.kapyScore.toHtml()
         html = html.replace(initValue, finalValue)
         self.ui.kapyScore.setHtml(html)
