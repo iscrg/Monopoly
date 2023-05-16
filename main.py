@@ -259,7 +259,7 @@ class uiControl():
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
     def diceValue(value):
-            ui.firstDice(ex, value)
+            ui.dice(ex, value)
         
 
     def message(value):
