@@ -69,7 +69,9 @@ class ui(QMainWindow):
         self.ui.kapyPlayer.move(x, y)
 
     def kapyTextEdit(self, initValue, finalValue):
+        print(initValue, finalValue)
         html = self.ui.kapyScore.toHtml()
+        print(html)
         html = html.replace(initValue, finalValue)
         self.ui.kapyScore.setHtml(html)
 
@@ -216,44 +218,44 @@ class uiControl():
 
         class balance():
             def kapy(initValue, finalValue):
-                initValue_ = f'</span> {initValue}</p>'
-                finalValue_ = f'</span> {finalValue}</p>'
+                initValue_ = f'</span> {initValue}<br />'
+                finalValue_ = f'</span> {finalValue}<br />'
                 ui.kapyTextEditEvnt(ex, initValue_, finalValue_)
 
             def dog(initValue, finalValue):
-                initValue_ = f'</span> {initValue}</p>'
-                finalValue_ = f'</span> {finalValue}</p>'
+                initValue_ = f'</span> {initValue}<br />'
+                finalValue_ = f'</span> {finalValue}<br />'
                 ui.dogTextEditEvnt(ex, initValue_, finalValue_)
 
             def gazmanov(initValue, finalValue):
-                initValue_ = f'</span> {initValue}</p>'
-                finalValue_ = f'</span> {finalValue}</p>'
+                initValue_ = f'</span> {initValue}<br />'
+                finalValue_ = f'</span> {finalValue}<br />'
                 ui.gazmanovTextEditEvnt(ex, initValue_, finalValue_)
 
             def parrot(initValue, finalValue):
-                initValue_ = f'</span> {initValue}</p>'
-                finalValue_ = f'</span> {finalValue}</p>'
+                initValue_ = f'</span> {initValue}<br />'
+                finalValue_ = f'</span> {finalValue}<br />'
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
         class status():
             def kapy(initValue, finalValue):
-                initValue_ = f'</span> {initValue}</p>'
-                finalValue_ = f'</span> {finalValue}</p>'
+                initValue_ = f'</span>{initValue}<br />'
+                finalValue_ = f'</span>{finalValue}<br />'
                 ui.kapyTextEditEvnt(ex, initValue_, finalValue_)
 
             def dog(initValue, finalValue):
-                initValue_ = f'</span> {initValue}</p>'
-                finalValue_ = f'</span> {finalValue}</p>'
+                initValue_ = f'</span> {finalValue}<br />'
+                finalValue_ = f'</span> {finalValue}<br />'
                 ui.dogTextEditEvnt(ex, initValue_, finalValue_)
 
             def gazmanov(initValue, finalValue):
-                initValue_ = f'</span> {initValue}</p>'
-                finalValue_ = f'</span> {finalValue}</p>'
+                initValue_ = f'</span> {finalValue}<br />'
+                finalValue_ = f'</span> {finalValue}<br />'
                 ui.gazmanovTextEditEvnt(ex, initValue_, finalValue_)
 
             def parrot(initValue, finalValue):
-                initValue_ = f'</span> {initValue}</p>'
-                finalValue_ = f'</span> {finalValue}</p>'
+                initValue_ = f'</span> {finalValue}<br />'
+                finalValue_ = f'</span> {finalValue}<br />'
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
     def diceValue(value):
@@ -298,6 +300,7 @@ def backend():
         else:
             uiControl.message('Выберите от 2 до 4 игроков!')
             continue
+
     uiControl.readData('Капибара')
 
     uiControl.readData('Собака')
