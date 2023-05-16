@@ -67,7 +67,7 @@ class ui(QMainWindow):
         self.sgnl.kapyTextEditSgnl.emit(initValue, finalValue)
 
     def kapyPosEdit(self, x, y):
-        self.ui.kapyPlayer.move(x, y)
+        self.ui.kapyPlayer.move(int(x), int(y))
 
     def kapyTextEdit(self, initValue, finalValue):
         html = self.ui.kapyScore.toHtml()
@@ -83,7 +83,7 @@ class ui(QMainWindow):
         self.sgnl.dogTextEditSgnl.emit(initValue, finalValue)
 
     def dogPosEdit(self, x, y):
-        self.ui.dogPlayer.move(x, y)
+        self.ui.dogPlayer.move(int(x), int(y))
 
     def dogTextEdit(self, initValue, finalValue):
         html = self.ui.dogScore.toHtml()
@@ -100,7 +100,7 @@ class ui(QMainWindow):
         self.sgnl.gazmanovTextEditSgnl.emit(initValue, finalValue)
 
     def gazmanovPosEdit(self, x, y):
-        self.ui.gazmanovPlayer.move(x, y)
+        self.ui.gazmanovPlayer.move(int(x), int(y))
 
     def gazmanovTextEdit(self, initValue, finalValue):
         html = self.ui.gazmanovScore.toHtml()
@@ -117,7 +117,7 @@ class ui(QMainWindow):
         self.sgnl.parrotTextEditSgnl.emit(initValue, finalValue)
 
     def parrotPosEdit(self, x, y):
-        self.ui.parrotPlayer.move(x, y)
+        self.ui.parrotPlayer.move(int(x), int(y))
 
     def parrotTextEdit(self, initValue, finalValue):
         html = self.ui.parrotScore.toHtml()
@@ -284,7 +284,7 @@ def backend():
     flag_dog = False
     flag_gazmanov = False
     flag_parrot = False
-    uiControl.message('Введите количество игроков !')
+    uiControl.message('Введите количество игроков!')
     while check == True:
         players = uiControl.readData('Система')
         if players == '2':
@@ -339,7 +339,7 @@ def backend():
     #uiControl.readData('Попугай')
 
     if flag_kapy:
-        uiControl.message('Капибара, чтобы кинуть кубик - введите y')
+        uiControl.message('Капибара, чтобы кинуть кубик - введите "y"')
         decision = uiControl.readData('Система')
         if decision == 'y':
             dice_number = random.randint(1,6)
@@ -347,7 +347,7 @@ def backend():
             uiControl.message('Ваше значение '+str(dice_number))
 
     if flag_dog:
-        uiControl.message('Опухший пес, чтобы кинуть кубик - введите y')
+        uiControl.message('Опухший пес, чтобы кинуть кубик - введите "y"')
         decision = uiControl.readData('Система')
         if decision == 'y':
             dice_number = random.randint(1,6)
@@ -355,7 +355,7 @@ def backend():
             uiControl.message('Ваше значение '+str(dice_number))
 
     if flag_gazmanov:
-        uiControl.message('Олег Газманов, чтобы кинуть кубик - введите y')
+        uiControl.message('Олег Газманов, чтобы кинуть кубик - введите "y"')
         decision = uiControl.readData('Система')
         if decision == 'y':
             dice_number = random.randint(1,6)
@@ -363,12 +363,20 @@ def backend():
             uiControl.message('Ваше значение '+str(dice_number))
             
     if flag_parrot:
-        uiControl.message('Попуг, чтобы кинуть кубик - введите y')
+        uiControl.message('Попуг, чтобы кинуть кубик - введите "y"')
         decision = uiControl.readData('Система')
         if decision == 'y':
             dice_number = random.randint(1,6)
             uiControl.diceValue(dice_number)
-            uiControl.message('Ваше значение'+str(dice_number))
+            uiControl.message(f'Ваше значение '+str(dice_number))
+
+    kapyPos = []
+    with open('pos/kapy.txt') as file:
+        for line in file.readlines():
+            kapyPos.append(line.rstrip('\n').split(' '))
+    print(f'for first position: x: {kapyPos[0][0]}, y: {kapyPos[0][1]}')
+    uiControl.move.kapy(kapyPos[dice_number][0], kapyPos[dice_number][1])
+
 def main():
     global ex
     global dataReadyEvent
