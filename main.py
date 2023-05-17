@@ -415,7 +415,50 @@ def backend():
         pass
 
     def fediuk():
-        pass
+        costData = []
+        with open('data/cost.txt') as file:
+            for line in file.readlines():
+                p = line.rstrip('\n')
+                costData.append(int(p))
+        rentData = []
+        with open('data/rent.txt') as file:
+            for line in file.readlines():
+                p = line.rstrip('\n').split(' ')
+                rentData.append([int(p[0]), int(p[1])])
+        pointsData = []
+        with open('data/points.txt', encoding="utf-8") as file:
+            for line in file.readlines():
+                pointsData.append(line.rstrip('\n'))
+
+
+        for NamePlayer in playerNames:
+            if data [playerName]['position'] in data[NamePlayer]['property']:
+                pass
+        else:
+            uiControl.message("Если хотите купить этот объект - введите 'y'. В противном случае 'n'")
+            decision = uiControl.readData(playerName)
+            if decision == 'y':
+                if data[playerName]['balance'] >= costData[data[playerName]['position']]:
+                    data[playerName]['property'].append(data[playerName]['position'])
+                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - costData[data[playerName]['position']])
+                    data[playerName]['balance'] -= costData[data[playerName]['position']]
+                    uiControl.score.property.add(playerName, pointsData[data[playerName]['position']])
+            elif decision == 'n':
+                pass
+                
+
+        
+
+
+
+
+
+
+
+
+
+
+
 
     playerNames = ['kapy', 'dog', 'gazmanov', 'parrot']
 
@@ -649,7 +692,8 @@ def backend():
 
                         uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
                         data[playerName]['balance'] = data[playerName]['balance'] - 70
-
+            else:
+                fediuk()
 
 def main():
     global ex
