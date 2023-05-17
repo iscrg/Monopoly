@@ -56,6 +56,7 @@ class ui(QMainWindow):
 
         self.ui.console.append(f'<span style="font-weight:600;font-size:12pt;"> [{player}]</span> <span style="font-size:12pt;">{self.ui.inputLine.text()}</span>')
         chatData = self.ui.inputLine.text()
+        self.ui.inputLine.setText('')
         dataReadyEvent.set()
 
     # Kapy control
