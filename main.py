@@ -443,6 +443,9 @@ def backend():
                     uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - costData[data[playerName]['position']])
                     data[playerName]['balance'] -= costData[data[playerName]['position']]
                     uiControl.score.property.add(playerName, pointsData[data[playerName]['position']])
+                    uiControl.message('Поздравляем с покупкой!')
+                else:
+                    uiControl.message('Недостаточно денег!')
             elif decision == 'n':
                 pass
                 
@@ -692,6 +695,17 @@ def backend():
 
                         uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
                         data[playerName]['balance'] = data[playerName]['balance'] - 70
+            elif data[playerName]['position'] == 0 or data[playerName]['position'] == 6 or data[playerName]['position'] == 12:
+                uiControl.message(posmsgPos[data[playerName]['position']])
+            elif data[playerName]['position'] == 18:
+                uiControl.message(posmsgPos[data[playerName]['position']])
+                xPos = pointPositions[playerName][6][0]
+                yPos = pointPositions[playerName][6][1]
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 6
+                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
+                data[playerName]['balance'] = data[playerName]['balance'] - 195
+                uiControl.score.status(playerName, 'В игре', 'В НГУ')
             else:
                 fediuk()
 
