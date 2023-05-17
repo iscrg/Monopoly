@@ -714,7 +714,75 @@ def backend():
                     uiControl.score.status(playerName, 'В игре', 'В НГУ')
                     data[playerName]['countNSU'] = 2
                 else:
-                    fediuk()
+                    
+                    costData = []
+                    with open('data/cost.txt') as file:
+                        for line in file.readlines():
+                            p = line.rstrip('\n')
+                            costData.append(int(p))
+
+                    rentData = []
+                    with open('data/rent.txt') as file:
+                        for line in file.readlines():
+                            p = line.rstrip('\n').split(' ')
+                            rentData.append([int(p[0]), int(p[1])])
+
+                    pointsData = []
+                    with open('data/points.txt', encoding="utf-8") as file:
+                        for line in file.readlines():
+                            pointsData.append(line.rstrip('\n'))
+
+                    streetsCombin = [[1,3],[5,7,8],[10,13,14],[16,17,19],[21,23],[2,11],[4,15,22]]
+                    combin_flag = False
+                    for NamePlayer in playerNames:
+                        if data[playerName]['position'] in data[NamePlayer]['property']:
+                            if NamePlayer == playerNames:
+                                break
+                            uiControl.message(f'Этот объект пренадлежит игроку "{data[NamePlayer]["name"]}"')
+                            for streetCombin in streetsCombin:
+                                if data[playerName]['position'] in streetCombin:
+                                    if set(streetCombin).issubset(set(data[NamePlayer]['property'])):
+                                        combin_flag = True
+                                    break
+                            if combin_flag:
+                                uiControl.message(f'Заплатите ему {rentData[data[playerName]["position"]][1]}₽, для этого введите - "p"')
+                                decision = uiControl.readData(data[playerName]['name'])
+
+                                if decision == 'p':
+                                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - rentData[data[playerName]['position']][1])
+                                    data[playerName]['balance'] -= rentData[data[playerName]['position']][1]
+
+                                    uiControl.score.balance(NamePlayer, data[NamePlayer]['balance'], data[NamePlayer]['balance'] + rentData[data[playerName]['position']][1])
+                                    data[NamePlayer]['balance'] += rentData[data[NamePlayer]['position']][1]
+
+                                    break
+                            else:
+                                uiControl.message(f'Заплатите ему {rentData[data[playerName]["position"]][0]}₽, для этого введите - "p"')
+                                decision = uiControl.readData(data[playerName]['name'])
+
+                                if decision == 'p':
+                                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - rentData[data[playerName]['position']][0])
+                                    data[playerName]['balance'] -= rentData[data[playerName]['position']][0]
+
+                                    uiControl.score.balance(NamePlayer, data[NamePlayer]['balance'], data[NamePlayer]['balance'] + rentData[data[playerName]['position']][0])
+                                    data[NamePlayer]['balance'] += rentData[data[NamePlayer]['position']][0]
+
+                                    break
+
+                    else:
+                        uiControl.message('Если хотите купить этот объект - введите "y". В противном случае "n"')
+                        decision = uiControl.readData(data[playerName]['name'])
+                        if decision == 'y':
+                            if data[playerName]['balance'] >= costData[data[playerName]['position']]:
+                                data[playerName]['property'].append(data[playerName]['position'])
+                                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - costData[data[playerName]['position']])
+                                data[playerName]['balance'] -= costData[data[playerName]['position']]
+                                uiControl.score.property.add(playerName, pointsData[data[playerName]['position']])
+                                uiControl.message('Поздравляем с покупкой!')
+                            else:
+                                uiControl.message('Недостаточно денег!')
+                        elif decision == 'n':
+                            pass
             else:
                 uiControl.message(f"{data[playerName]['name']} пропускает ход, так как он учится")
                 data[playerName]['countNSU'] -= 1
