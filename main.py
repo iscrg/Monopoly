@@ -322,6 +322,7 @@ def backend():
                     data[playerName]['balance'] = data[playerName]['balance'] - 195
                     print(data[playerName]['balance'])
                     uiControl.score.status(playerName, 'В игре', 'В НГУ')
+                    data[playerName]['countNSU'] = 2
                 
                 elif event == 1:
                     uiControl.message(eventsData[event])
@@ -471,7 +472,8 @@ def backend():
             'balance': 0,
             'status': 'Не в игре',
             'position': 0,
-            'property': []
+            'property': [],
+            'countNSU' : 0
         },
 
         'dog': {
@@ -479,7 +481,8 @@ def backend():
             'balance': 0,
             'status': 'Не в игре',
             'position': 0,
-            'property': []
+            'property': [],
+            'countNSU' : 0
         },
 
         'gazmanov': {
@@ -487,7 +490,8 @@ def backend():
             'balance': 0,
             'status': 'Не в игре',
             'position': 0,
-            'property': []
+            'property': [],
+            'countNSU' : 0
         },
 
         'parrot': {
@@ -495,7 +499,8 @@ def backend():
             'balance': 0,
             'status': 'Не в игре',
             'position': 0,
-            'property': []
+            'property': [],
+            'countNSU' : 0
         }
 
     }
@@ -556,159 +561,164 @@ def backend():
 
     while True:
         for playerName in playerNames:
-            uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "y"')
-            decision = uiControl.readData(data[playerName]['name'])
-
-            if decision == 'y':
-                dice_number = random.randint(1, 6)
-                uiControl.diceValue(dice_number)
-                uiControl.message(diceMessages[dice_number-1])
-
-                playerPos = data[playerName]['position']
-
-                if playerPos + dice_number > 23:
-                    playerPos = dice_number - (24-playerPos)
-
-                    xPos = pointPositions[playerName][playerPos][0]
-                    yPos = pointPositions[playerName][playerPos][1]
-
-                    uiControl.move(playerName, xPos, yPos)
-
-                else:
-                    playerPos += dice_number
-
-                    xPos = pointPositions[playerName][playerPos][0]
-                    yPos = pointPositions[playerName][playerPos][1]
-
-                    uiControl.move(playerName, xPos, yPos)
-
-                data[playerName]['position'] = playerPos
-            
-            if data[playerName]['position'] == 9 or data[playerName]['position'] == 20:
-            
-                event = random.randint(0,9)
-
-                uiControl.message(posmsgPos[data[playerName]['position']])
+            if data[playerName]['countNSU'] <= 0:
+                uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "y"')
                 decision = uiControl.readData(data[playerName]['name'])
 
                 if decision == 'y':
+                    dice_number = random.randint(1, 6)
+                    uiControl.diceValue(dice_number)
+                    uiControl.message(diceMessages[dice_number-1])
 
-                    if event == 0:
-                        uiControl.message(eventsData[event])
+                    playerPos = data[playerName]['position']
 
-                        xPos = pointPositions[playerName][6][0]
-                        yPos = pointPositions[playerName][6][1]
+                    if playerPos + dice_number > 23:
+                        playerPos = dice_number - (24-playerPos)
 
-                        uiControl.move(playerName, xPos, yPos)
-                        data[playerName]['position'] = 6
-
-                        uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
-                        data[playerName]['balance'] = data[playerName]['balance'] - 195
-                        print(data[playerName]['balance'])
-                        uiControl.score.status(playerName, 'В игре', 'В НГУ')
-                    
-                    elif event == 1:
-                        uiControl.message(eventsData[event])
-
-                        xPos = pointPositions[playerName][23][0]
-                        yPos = pointPositions[playerName][23][1]
+                        xPos = pointPositions[playerName][playerPos][0]
+                        yPos = pointPositions[playerName][playerPos][1]
 
                         uiControl.move(playerName, xPos, yPos)
-                        data[playerName]['position'] = 23
 
-                    elif event == 2:
-                        uiControl.message(eventsData[event])
+                    else:
+                        playerPos += dice_number
 
-                        uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
-                        data[playerName]['balance'] = data[playerName]['balance'] + 100
+                        xPos = pointPositions[playerName][playerPos][0]
+                        yPos = pointPositions[playerName][playerPos][1]
+
+                        uiControl.move(playerName, xPos, yPos)
+
+                    data[playerName]['position'] = playerPos
+                
+                if data[playerName]['position'] == 9 or data[playerName]['position'] == 20:
+                
+                    event = random.randint(0,9)
+
+                    uiControl.message(posmsgPos[data[playerName]['position']])
+                    decision = uiControl.readData(data[playerName]['name'])
+
+                    if decision == 'y':
+
+                        if event == 0:
+                            uiControl.message(eventsData[event])
+
+                            xPos = pointPositions[playerName][6][0]
+                            yPos = pointPositions[playerName][6][1]
+
+                            uiControl.move(playerName, xPos, yPos)
+                            data[playerName]['position'] = 6
+
+                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
+                            data[playerName]['balance'] = data[playerName]['balance'] - 195
+                            print(data[playerName]['balance'])
+                            uiControl.score.status(playerName, 'В игре', 'В НГУ')
                         
-                        xPos = pointPositions[playerName][2][0]
-                        yPos = pointPositions[playerName][2][1]
+                        elif event == 1:
+                            uiControl.message(eventsData[event])
 
-                        uiControl.move(playerName, xPos, yPos)
-                        data[playerName]['position'] = 2
-                    
-                    elif event == 3:
-                        uiControl.message(eventsData[event])
+                            xPos = pointPositions[playerName][23][0]
+                            yPos = pointPositions[playerName][23][1]
 
-                        uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 50)
-                        data[playerName]['balance'] = data[playerName]['balance'] + 50
+                            uiControl.move(playerName, xPos, yPos)
+                            data[playerName]['position'] = 23
 
-                    elif event == 4:
-                        uiControl.message(eventsData[event])
+                        elif event == 2:
+                            uiControl.message(eventsData[event])
 
-                        if data[playerName]['position'] > 19:
                             uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
                             data[playerName]['balance'] = data[playerName]['balance'] + 100
+                            
+                            xPos = pointPositions[playerName][2][0]
+                            yPos = pointPositions[playerName][2][1]
+
+                            uiControl.move(playerName, xPos, yPos)
+                            data[playerName]['position'] = 2
                         
-                        xPos = pointPositions[playerName][19][0]
-                        yPos = pointPositions[playerName][19][1]
+                        elif event == 3:
+                            uiControl.message(eventsData[event])
 
-                        uiControl.move(playerName, xPos, yPos)
-                        data[playerName]['position'] = 19
-                    
-                    elif event == 5:
-                        uiControl.message(eventsData[event])
+                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 50)
+                            data[playerName]['balance'] = data[playerName]['balance'] + 50
 
-                        if data[playerName]['position'] > 15:
+                        elif event == 4:
+                            uiControl.message(eventsData[event])
+
+                            if data[playerName]['position'] > 19:
+                                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
+                                data[playerName]['balance'] = data[playerName]['balance'] + 100
+                            
+                            xPos = pointPositions[playerName][19][0]
+                            yPos = pointPositions[playerName][19][1]
+
+                            uiControl.move(playerName, xPos, yPos)
+                            data[playerName]['position'] = 19
+                        
+                        elif event == 5:
+                            uiControl.message(eventsData[event])
+
+                            if data[playerName]['position'] > 15:
+                                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
+                                data[playerName]['balance'] = data[playerName]['balance'] + 100
+                            
+                            xPos = pointPositions[playerName][15][0]
+                            yPos = pointPositions[playerName][15][1]
+
+                            uiControl.move(playerName, xPos, yPos)
+                            data[playerName]['position'] = 15
+                        
+                        elif event == 6:
+                            uiControl.message(eventsData[event])
+
                             uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
                             data[playerName]['balance'] = data[playerName]['balance'] + 100
+                            
+                            xPos = pointPositions[playerName][0][0]
+                            yPos = pointPositions[playerName][0][1]
+
+                            uiControl.move(playerName, xPos, yPos)
+                            data[playerName]['position'] = 0
+
+                        elif event == 7:
+                            uiControl.message(eventsData[event])
+
+                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
+                            data[playerName]['balance'] = data[playerName]['balance'] - 70
+
+                        elif event == 8:
+                            uiControl.message(eventsData[event])
+
+                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 50)
+                            data[playerName]['balance'] = data[playerName]['balance'] + 50
+                            
+                            xPos = pointPositions[playerName][4][0]
+                            yPos = pointPositions[playerName][4][1]
+
+                            uiControl.move(playerName, xPos, yPos)
+                            data[playerName]['position'] = 4
                         
-                        xPos = pointPositions[playerName][15][0]
-                        yPos = pointPositions[playerName][15][1]
+                        elif event == 9:
+                            uiControl.message(eventsData[event])
 
-                        uiControl.move(playerName, xPos, yPos)
-                        data[playerName]['position'] = 15
-                    
-                    elif event == 6:
-                        uiControl.message(eventsData[event])
-
-                        uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
-                        data[playerName]['balance'] = data[playerName]['balance'] + 100
-                        
-                        xPos = pointPositions[playerName][0][0]
-                        yPos = pointPositions[playerName][0][1]
-
-                        uiControl.move(playerName, xPos, yPos)
-                        data[playerName]['position'] = 0
-
-                    elif event == 7:
-                        uiControl.message(eventsData[event])
-
-                        uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
-                        data[playerName]['balance'] = data[playerName]['balance'] - 70
-
-                    elif event == 8:
-                        uiControl.message(eventsData[event])
-
-                        uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 50)
-                        data[playerName]['balance'] = data[playerName]['balance'] + 50
-                        
-                        xPos = pointPositions[playerName][4][0]
-                        yPos = pointPositions[playerName][4][1]
-
-                        uiControl.move(playerName, xPos, yPos)
-                        data[playerName]['position'] = 4
-                    
-                    elif event == 9:
-                        uiControl.message(eventsData[event])
-
-                        uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
-                        data[playerName]['balance'] = data[playerName]['balance'] - 70
-            elif data[playerName]['position'] == 0 or data[playerName]['position'] == 6 or data[playerName]['position'] == 12:
-                uiControl.message(posmsgPos[data[playerName]['position']])
-            elif data[playerName]['position'] == 18:
-                uiControl.message(posmsgPos[data[playerName]['position']])
-                xPos = pointPositions[playerName][6][0]
-                yPos = pointPositions[playerName][6][1]
-                uiControl.move(playerName, xPos, yPos)
-                data[playerName]['position'] = 6
-                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
-                data[playerName]['balance'] = data[playerName]['balance'] - 195
-                uiControl.score.status(playerName, 'В игре', 'В НГУ')
+                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
+                            data[playerName]['balance'] = data[playerName]['balance'] - 70
+                elif data[playerName]['position'] == 0 or data[playerName]['position'] == 6 or data[playerName]['position'] == 12:
+                    uiControl.message(posmsgPos[data[playerName]['position']])
+                elif data[playerName]['position'] == 18:
+                    uiControl.message(posmsgPos[data[playerName]['position']])
+                    xPos = pointPositions[playerName][6][0]
+                    yPos = pointPositions[playerName][6][1]
+                    uiControl.move(playerName, xPos, yPos)
+                    data[playerName]['position'] = 6
+                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
+                    data[playerName]['balance'] = data[playerName]['balance'] - 195
+                    uiControl.score.status(playerName, 'В игре', 'В НГУ')
+                    data[playerName]['countNSU'] = 2
+                else:
+                    fediuk()
             else:
-                fediuk()
-
+                uiControl.message(f"{data[playerName]['name']} пропускает ход, так как он учится")
+                data[playerName]['countNSU'] -= 1
+                print(data[playerName]['countNSU'])
 def main():
     global ex
     global dataReadyEvent
