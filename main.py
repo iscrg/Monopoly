@@ -734,18 +734,22 @@ def backend():
 
                     streetsCombin = [[1,3],[5,7,8],[10,13,14],[16,17,19],[21,23],[2,11],[4,15,22]]
                     combin_flag = False
+                    used_flag = True
+                    mine_flag = False
                     for NamePlayer in playerNames:
+                        if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
+                            mine_flag = True
+                            continue
                         if data[playerName]['position'] in data[NamePlayer]['property']:
-                            if NamePlayer == playerNames:
-                                break
-                            uiControl.message(f'Этот объект пренадлежит игроку "{data[NamePlayer]["name"]}"')
+                            used_flag = False
+                            #uiControl.message(f'Этот объект пренадлежит игроку "{data[NamePlayer]["name"]}"')
                             for streetCombin in streetsCombin:
                                 if data[playerName]['position'] in streetCombin:
                                     if set(streetCombin).issubset(set(data[NamePlayer]['property'])):
                                         combin_flag = True
                                     break
                             if combin_flag:
-                                uiControl.message(f'Заплатите ему {rentData[data[playerName]["position"]][1]}₽, для этого введите - "p"')
+                                uiControl.message(f'Этот объект пренадлежит игроку "{data[NamePlayer]["name"]}". Заплатите ему {rentData[data[playerName]["position"]][1]}₽, для этого введите - "p"')
                                 decision = uiControl.readData(data[playerName]['name'])
 
                                 if decision == 'p':
@@ -757,7 +761,7 @@ def backend():
 
                                     break
                             else:
-                                uiControl.message(f'Заплатите ему {rentData[data[playerName]["position"]][0]}₽, для этого введите - "p"')
+                                uiControl.message(f'Этот объект пренадлежит игроку "{data[NamePlayer]["name"]}". Заплатите ему {rentData[data[playerName]["position"]][0]}₽, для этого введите - "p"')
                                 decision = uiControl.readData(data[playerName]['name'])
 
                                 if decision == 'p':
@@ -769,7 +773,10 @@ def backend():
 
                                     break
 
-                    else:
+                    if used_flag:
+                        if mine_flag:
+                            uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                            continue
                         uiControl.message('Если хотите купить этот объект - введите "y". В противном случае "n"')
                         decision = uiControl.readData(data[playerName]['name'])
                         if decision == 'y':
