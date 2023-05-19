@@ -472,9 +472,11 @@ def backend():
     def propertySell():
         nonlocal data
         nonlocal playerName
+        nonlocal costData
+        nonlocal pointsData
 
         if len(data[playerName]['property']) == 0:
-            uiControl.message(f'{data[playerName]["name"]}, на вашем счёте недостаточно средств. У вас отсутствует недвижимость для продажи - вы бонкрот! Вы покидаете Академгородок!')
+            uiControl.message(f'{data[playerName]["name"]}, на вашем счёте недостаточно средств. У вас отсутствует недвижимость для продажи - вы банкрот! Вы покидаете Академгородок!')
             playerNames.remove(playerName)
             uiControl.score.status(playerName, data[playerName]['status'], 'Не в игре')
             uiControl.hide(playerName, True)
@@ -502,6 +504,8 @@ def backend():
     def eventHandler():
         nonlocal data
         nonlocal playerName
+        nonlocal pointPositions
+        nonlocal NamePlayer
 
         event = random.randint(0,9)
 
@@ -523,8 +527,9 @@ def backend():
                 if data[playerName]['status'] != 'Не в игре':
                     uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
                     data[playerName]['balance'] = data[playerName]['balance'] - 195
-                    print(data[playerName]['balance'])
+
                     uiControl.score.status(playerName, 'В игре', 'В НГУ')
+                    data[playerName]['countNSU'] = 2
                 
             elif event == 1:
                 uiControl.message(eventsData[event])
@@ -534,6 +539,25 @@ def backend():
 
                 uiControl.move(playerName, xPos, yPos)
                 data[playerName]['position'] = 23
+
+                used_flag = True
+                mine_flag = False
+
+                for NamePlayer in playerNames:
+                    if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
+                        mine_flag = True
+                        continue
+
+                    if data[playerName]['position'] in data[NamePlayer]['property']:
+                        used_flag = False
+                        propertyPayment()
+                        break
+
+                if used_flag:
+                    if mine_flag:
+                        uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                    else:
+                        propertyPurch()
 
             elif event == 2:
                 uiControl.message(eventsData[event])
@@ -546,6 +570,25 @@ def backend():
 
                 uiControl.move(playerName, xPos, yPos)
                 data[playerName]['position'] = 2
+
+                used_flag = True
+                mine_flag = False
+
+                for NamePlayer in playerNames:
+                    if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
+                        mine_flag = True
+                        continue
+
+                    if data[playerName]['position'] in data[NamePlayer]['property']:
+                        used_flag = False
+                        propertyPayment()
+                        break
+
+                if used_flag:
+                    if mine_flag:
+                        uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                    else:
+                        propertyPurch()
             
             elif event == 3:
                 uiControl.message(eventsData[event])
@@ -565,6 +608,25 @@ def backend():
 
                 uiControl.move(playerName, xPos, yPos)
                 data[playerName]['position'] = 19
+
+                used_flag = True
+                mine_flag = False
+
+                for NamePlayer in playerNames:
+                    if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
+                        mine_flag = True
+                        continue
+
+                    if data[playerName]['position'] in data[NamePlayer]['property']:
+                        used_flag = False
+                        propertyPayment()
+                        break
+
+                if used_flag:
+                    if mine_flag:
+                        uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                    else:
+                        propertyPurch()
             
             elif event == 5:
                 uiControl.message(eventsData[event])
@@ -578,6 +640,25 @@ def backend():
 
                 uiControl.move(playerName, xPos, yPos)
                 data[playerName]['position'] = 15
+
+                used_flag = True
+                mine_flag = False
+
+                for NamePlayer in playerNames:
+                    if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
+                        mine_flag = True
+                        continue
+
+                    if data[playerName]['position'] in data[NamePlayer]['property']:
+                        used_flag = False
+                        propertyPayment()
+                        break
+
+                if used_flag:
+                    if mine_flag:
+                        uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                    else:
+                        propertyPurch()
             
             elif event == 6:
                 uiControl.message(eventsData[event])
@@ -611,6 +692,25 @@ def backend():
 
                 uiControl.move(playerName, xPos, yPos)
                 data[playerName]['position'] = 4
+
+                used_flag = True
+                mine_flag = False
+
+                for NamePlayer in playerNames:
+                    if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
+                        mine_flag = True
+                        continue
+
+                    if data[playerName]['position'] in data[NamePlayer]['property']:
+                        used_flag = False
+                        propertyPayment()
+                        break
+
+                if used_flag:
+                    if mine_flag:
+                        uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                    else:
+                        propertyPurch()
             
             elif event == 9:
                 uiControl.message(eventsData[event])
@@ -621,6 +721,11 @@ def backend():
                     data[playerName]['balance'] = data[playerName]['balance'] - 70
 
     def propertyPurch():
+        nonlocal data
+        nonlocal playerName
+        nonlocal costData
+        nonlocal pointsData
+
         uiControl.message('Если хотите купить этот объект - введите "b". В противном случае "n"')
         decision = uiControl.readData(data[playerName]['name'])
 
@@ -642,21 +747,28 @@ def backend():
     def nsuAdmition():
         nonlocal data
         nonlocal playerName
+        nonlocal pointPositions
 
         xPos = pointPositions[playerName][6][0]
         yPos = pointPositions[playerName][6][1]
         uiControl.move(playerName, xPos, yPos)
         data[playerName]['position'] = 6
 
-        uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
-        data[playerName]['balance'] = data[playerName]['balance'] - 195
+        while data[playerName]['balance'] < 195:
+            propertySell()
+        if data[playerName]['status'] != 'Не в игре':
+            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
+            data[playerName]['balance'] = data[playerName]['balance'] - 195
 
-        uiControl.score.status(playerName, 'В игре', 'В НГУ')
-        data[playerName]['countNSU'] = 2
+            uiControl.score.status(playerName, 'В игре', 'В НГУ')
+            data[playerName]['countNSU'] = 2
 
     def moveMechanism():
         nonlocal data
         nonlocal playerName
+        nonlocal posmsgPos
+        nonlocal diceMessages
+        nonlocal pointPositions
 
         uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "k"')
         decision = uiControl.readData(data[playerName]['name'])
@@ -688,6 +800,12 @@ def backend():
             uiControl.message(posmsgPos[data[playerName]['position']])
 
     def propertyPayment():
+        nonlocal streetsCombin
+        nonlocal NamePlayer
+        nonlocal data
+        nonlocal rentData
+        nonlocal playerName
+
         combin_flag = False
 
         for streetCombin in streetsCombin:
@@ -715,6 +833,9 @@ def backend():
                 data[NamePlayer]['balance'] += rentData[data[NamePlayer]['position']][cost]
 
     def strokeLoss():
+        nonlocal playerName
+        nonlocal data
+
         uiControl.message(f"{data[playerName]['name']} пропускает ход, так как он учится")
         data[playerName]['countNSU'] -= 1
         print(data[playerName]['countNSU'])
@@ -731,8 +852,8 @@ def backend():
                     eventHandler()
 
                 elif (data[playerName]['position'] == 0 or
-                     data[playerName]['position'] == 6 or
-                     data[playerName]['position'] == 12):
+                    data[playerName]['position'] == 6 or
+                    data[playerName]['position'] == 12):
                     pass
 
                 elif data[playerName]['position'] == 18:
@@ -756,8 +877,8 @@ def backend():
                         if mine_flag:
                             uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
                             continue
-
-                        propertyPurch()
+                        else:
+                            propertyPurch()
 
             else:
                 strokeLoss()
