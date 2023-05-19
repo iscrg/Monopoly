@@ -482,10 +482,10 @@ def backend():
             uiControl.hide(playerName, True)
         else:
             uiControl.message(f'{data[playerName]["name"]}, на вашем счёте недостаточно средств. У вас есть недвижимость для продажи. Введите название объекта, который хотите продать!')
-            prop = uiControl.readData(playerName)
+            prop = uiControl.readData(data[playerName]['name'])
             while prop not in pointsData:
                 uiControl.message(f'{data[playerName]["name"]}, введите корректное название объекта.')
-                prop = uiControl.readData(playerName)
+                prop = uiControl.readData(data[playerName]['name'])
 
             propPos = pointsData.index(prop)
 
