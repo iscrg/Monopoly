@@ -507,11 +507,7 @@ def backend():
 
     playersQuantity = 0
 
-    diceMessages = []
-
-    eventsData = []
-
-    posmsgPos = []
+    streetsCombin = [[1,3],[5,7,8],[10,13,14],[16,17,19],[21,23],[2,11],[4,15,22]]
 
     pointPositions = {
         'kapy': [],
@@ -526,274 +522,307 @@ def backend():
                 line = line.rstrip('\n').split(' ')
                 pointPositions[playerName].append(line)
 
+    diceMessages = []
     with open('data/dicemsg.txt', encoding='utf-8') as file:
         for line in file.readlines():
             diceMessages.append(line.rstrip('\n'))
     
+    eventsData = []
     with open('data/events.txt', encoding="utf-8") as file:
         for line in file.readlines():
             eventsData.append(line.rstrip('\n'))
     
+    posmsgPos = []
     with open('pos/posmsg.txt', encoding="utf-8") as file:
         for line in file.readlines():
                 posmsgPos.append(line.rstrip('\n'))
 
-    while True:
-        uiControl.message('Введите количество игроков от 2 до 4.')
-        playersQuantity = uiControl.readData('Игрок')
+    costData = []
+    with open('data/cost.txt') as file:
+        for line in file.readlines():
+            p = line.rstrip('\n')
+            costData.append(int(p))
 
-        try:
-            playersQuantity = int(playersQuantity)
-            if not (2 <= playersQuantity <= 4):
+    rentData = []
+    with open('data/rent.txt') as file:
+        for line in file.readlines():
+            p = line.rstrip('\n').split(' ')
+            rentData.append([int(p[0]), int(p[1])])
+
+    pointsData = []
+    with open('data/points.txt', encoding="utf-8") as file:
+        for line in file.readlines():
+            pointsData.append(line.rstrip('\n'))
+
+    def startgame():
+        while True:
+            uiControl.message('Введите количество игроков от 2 до 4.')
+            playersQuantity = uiControl.readData('Игрок')
+
+            try:
+                playersQuantity = int(playersQuantity)
+                if not (2 <= playersQuantity <= 4):
+                    continue
+            except:
                 continue
-        except:
-            continue
 
-        playerNames = playerNames[:playersQuantity]
+            playerNames = playerNames[:playersQuantity]
 
-        for playerName in playerNames:
-            uiControl.hide(playerName, False)
-            uiControl.score.balance(playerName, 0, 1000)
-            data[playerName]['balance'] = 1000
-            uiControl.score.status(playerName, 'Не в игре', 'В игре')
+            for playerName in playerNames:
+                uiControl.hide(playerName, False)
+                uiControl.score.balance(playerName, 0, 1000)
+                data[playerName]['balance'] = 1000
+                uiControl.score.status(playerName, 'Не в игре', 'В игре')
 
-        break
+            break
+
+    def eventHandler():
+        event = random.randint(0,9)
+
+        uiControl.message(posmsgPos[data[playerName]['position']])
+        decision = uiControl.readData(data[playerName]['name'])
+
+        if decision == 'y':
+
+            if event == 0:
+                uiControl.message(eventsData[event])
+
+                xPos = pointPositions[playerName][6][0]
+                yPos = pointPositions[playerName][6][1]
+
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 6
+
+                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
+                data[playerName]['balance'] = data[playerName]['balance'] - 195
+                print(data[playerName]['balance'])
+                uiControl.score.status(playerName, 'В игре', 'В НГУ')
+            
+            elif event == 1:
+                uiControl.message(eventsData[event])
+
+                xPos = pointPositions[playerName][23][0]
+                yPos = pointPositions[playerName][23][1]
+
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 23
+
+            elif event == 2:
+                uiControl.message(eventsData[event])
+
+                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
+                data[playerName]['balance'] = data[playerName]['balance'] + 100
+                
+                xPos = pointPositions[playerName][2][0]
+                yPos = pointPositions[playerName][2][1]
+
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 2
+            
+            elif event == 3:
+                uiControl.message(eventsData[event])
+
+                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 50)
+                data[playerName]['balance'] = data[playerName]['balance'] + 50
+
+            elif event == 4:
+                uiControl.message(eventsData[event])
+
+                if data[playerName]['position'] > 19:
+                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
+                    data[playerName]['balance'] = data[playerName]['balance'] + 100
+                
+                xPos = pointPositions[playerName][19][0]
+                yPos = pointPositions[playerName][19][1]
+
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 19
+            
+            elif event == 5:
+                uiControl.message(eventsData[event])
+
+                if data[playerName]['position'] > 15:
+                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
+                    data[playerName]['balance'] = data[playerName]['balance'] + 100
+                
+                xPos = pointPositions[playerName][15][0]
+                yPos = pointPositions[playerName][15][1]
+
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 15
+            
+            elif event == 6:
+                uiControl.message(eventsData[event])
+
+                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
+                data[playerName]['balance'] = data[playerName]['balance'] + 100
+                
+                xPos = pointPositions[playerName][0][0]
+                yPos = pointPositions[playerName][0][1]
+
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 0
+
+            elif event == 7:
+                uiControl.message(eventsData[event])
+
+                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
+                data[playerName]['balance'] = data[playerName]['balance'] - 70
+
+            elif event == 8:
+                uiControl.message(eventsData[event])
+
+                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 50)
+                data[playerName]['balance'] = data[playerName]['balance'] + 50
+                
+                xPos = pointPositions[playerName][4][0]
+                yPos = pointPositions[playerName][4][1]
+
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 4
+            
+            elif event == 9:
+                uiControl.message(eventsData[event])
+
+                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
+                data[playerName]['balance'] = data[playerName]['balance'] - 70
+
+    def propertyPurch():
+        uiControl.message('Если хотите купить этот объект - введите "y". В противном случае "n"')
+        decision = uiControl.readData(data[playerName]['name'])
+
+        if decision == 'y':
+            if data[playerName]['balance'] >= costData[data[playerName]['position']]:
+                data[playerName]['property'].append(data[playerName]['position'])
+
+                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - costData[data[playerName]['position']])
+
+                data[playerName]['balance'] -= costData[data[playerName]['position']]
+                uiControl.score.property.add(playerName, pointsData[data[playerName]['position']])
+                
+                uiControl.message('Поздравляем с покупкой!')
+            else:
+                uiControl.message('Недостаточно денег!')
+        elif decision == 'n':
+            pass
+
+    def nsuAdmition():
+        uiControl.message(posmsgPos[data[playerName]['position']])
+
+        xPos = pointPositions[playerName][6][0]
+        yPos = pointPositions[playerName][6][1]
+        uiControl.move(playerName, xPos, yPos)
+        data[playerName]['position'] = 6
+
+        uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
+        data[playerName]['balance'] = data[playerName]['balance'] - 195
+
+        uiControl.score.status(playerName, 'В игре', 'В НГУ')
+        data[playerName]['countNSU'] = 2
+
+    def moveMechanism():
+        uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "y"')
+        decision = uiControl.readData(data[playerName]['name'])
+
+        if decision == 'y':
+            dice_number = random.randint(1, 6)
+            uiControl.diceValue(dice_number)
+            uiControl.message(diceMessages[dice_number-1])
+
+            playerPos = data[playerName]['position']
+
+            if playerPos + dice_number > 23:
+                playerPos = dice_number - (24-playerPos)
+
+                xPos = pointPositions[playerName][playerPos][0]
+                yPos = pointPositions[playerName][playerPos][1]
+
+                uiControl.move(playerName, xPos, yPos)
+
+            else:
+                playerPos += dice_number
+
+                xPos = pointPositions[playerName][playerPos][0]
+                yPos = pointPositions[playerName][playerPos][1]
+
+                uiControl.move(playerName, xPos, yPos)
+
+            data[playerName]['position'] = playerPos
+
+    def propertyPayment():
+        combin_flag = False
+
+        for streetCombin in streetsCombin:
+            if data[playerName]['position'] in streetCombin:
+                if set(streetCombin).issubset(set(data[NamePlayer]['property'])):
+                    combin_flag = True
+                break
+
+        if combin_flag == True:
+            cost = 1
+        else:
+            cost = 0
+
+        uiControl.message(f'Этот объект пренадлежит игроку "{data[NamePlayer]["name"]}". Заплатите ему {rentData[data[playerName]["position"]][cost]}₽, для этого введите - "p"')
+        decision = uiControl.readData(data[playerName]['name'])
+
+        if decision == 'p':
+            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - rentData[data[playerName]['position']][cost])
+            data[playerName]['balance'] -= rentData[data[playerName]['position']][cost]
+
+            uiControl.score.balance(NamePlayer, data[NamePlayer]['balance'], data[NamePlayer]['balance'] + rentData[data[playerName]['position']][cost])
+            data[NamePlayer]['balance'] += rentData[data[NamePlayer]['position']][cost]
+
+    def strokeLoss():
+        uiControl.message(f"{data[playerName]['name']} пропускает ход, так как он учится")
+        data[playerName]['countNSU'] -= 1
+        print(data[playerName]['countNSU'])
+
+    startgame()
 
     while True:
         for playerName in playerNames:
             if data[playerName]['countNSU'] <= 0:
-                uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "y"')
-                decision = uiControl.readData(data[playerName]['name'])
 
-                if decision == 'y':
-                    dice_number = random.randint(1, 6)
-                    uiControl.diceValue(dice_number)
-                    uiControl.message(diceMessages[dice_number-1])
-
-                    playerPos = data[playerName]['position']
-
-                    if playerPos + dice_number > 23:
-                        playerPos = dice_number - (24-playerPos)
-
-                        xPos = pointPositions[playerName][playerPos][0]
-                        yPos = pointPositions[playerName][playerPos][1]
-
-                        uiControl.move(playerName, xPos, yPos)
-
-                    else:
-                        playerPos += dice_number
-
-                        xPos = pointPositions[playerName][playerPos][0]
-                        yPos = pointPositions[playerName][playerPos][1]
-
-                        uiControl.move(playerName, xPos, yPos)
-
-                    data[playerName]['position'] = playerPos
+                moveMechanism()
                 
                 if data[playerName]['position'] == 9 or data[playerName]['position'] == 20:
-                
-                    event = random.randint(0,9)
+                    eventHandler()
 
+                elif (data[playerName]['position'] == 0 or 
+                      data[playerName]['position'] == 6 or 
+                      data[playerName]['position'] == 12):
                     uiControl.message(posmsgPos[data[playerName]['position']])
-                    decision = uiControl.readData(data[playerName]['name'])
 
-                    if decision == 'y':
-
-                        if event == 0:
-                            uiControl.message(eventsData[event])
-
-                            xPos = pointPositions[playerName][6][0]
-                            yPos = pointPositions[playerName][6][1]
-
-                            uiControl.move(playerName, xPos, yPos)
-                            data[playerName]['position'] = 6
-
-                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
-                            data[playerName]['balance'] = data[playerName]['balance'] - 195
-                            print(data[playerName]['balance'])
-                            uiControl.score.status(playerName, 'В игре', 'В НГУ')
-                        
-                        elif event == 1:
-                            uiControl.message(eventsData[event])
-
-                            xPos = pointPositions[playerName][23][0]
-                            yPos = pointPositions[playerName][23][1]
-
-                            uiControl.move(playerName, xPos, yPos)
-                            data[playerName]['position'] = 23
-
-                        elif event == 2:
-                            uiControl.message(eventsData[event])
-
-                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
-                            data[playerName]['balance'] = data[playerName]['balance'] + 100
-                            
-                            xPos = pointPositions[playerName][2][0]
-                            yPos = pointPositions[playerName][2][1]
-
-                            uiControl.move(playerName, xPos, yPos)
-                            data[playerName]['position'] = 2
-                        
-                        elif event == 3:
-                            uiControl.message(eventsData[event])
-
-                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 50)
-                            data[playerName]['balance'] = data[playerName]['balance'] + 50
-
-                        elif event == 4:
-                            uiControl.message(eventsData[event])
-
-                            if data[playerName]['position'] > 19:
-                                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
-                                data[playerName]['balance'] = data[playerName]['balance'] + 100
-                            
-                            xPos = pointPositions[playerName][19][0]
-                            yPos = pointPositions[playerName][19][1]
-
-                            uiControl.move(playerName, xPos, yPos)
-                            data[playerName]['position'] = 19
-                        
-                        elif event == 5:
-                            uiControl.message(eventsData[event])
-
-                            if data[playerName]['position'] > 15:
-                                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
-                                data[playerName]['balance'] = data[playerName]['balance'] + 100
-                            
-                            xPos = pointPositions[playerName][15][0]
-                            yPos = pointPositions[playerName][15][1]
-
-                            uiControl.move(playerName, xPos, yPos)
-                            data[playerName]['position'] = 15
-                        
-                        elif event == 6:
-                            uiControl.message(eventsData[event])
-
-                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
-                            data[playerName]['balance'] = data[playerName]['balance'] + 100
-                            
-                            xPos = pointPositions[playerName][0][0]
-                            yPos = pointPositions[playerName][0][1]
-
-                            uiControl.move(playerName, xPos, yPos)
-                            data[playerName]['position'] = 0
-
-                        elif event == 7:
-                            uiControl.message(eventsData[event])
-
-                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
-                            data[playerName]['balance'] = data[playerName]['balance'] - 70
-
-                        elif event == 8:
-                            uiControl.message(eventsData[event])
-
-                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 50)
-                            data[playerName]['balance'] = data[playerName]['balance'] + 50
-                            
-                            xPos = pointPositions[playerName][4][0]
-                            yPos = pointPositions[playerName][4][1]
-
-                            uiControl.move(playerName, xPos, yPos)
-                            data[playerName]['position'] = 4
-                        
-                        elif event == 9:
-                            uiControl.message(eventsData[event])
-
-                            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
-                            data[playerName]['balance'] = data[playerName]['balance'] - 70
-                elif data[playerName]['position'] == 0 or data[playerName]['position'] == 6 or data[playerName]['position'] == 12:
-                    uiControl.message(posmsgPos[data[playerName]['position']])
                 elif data[playerName]['position'] == 18:
-                    uiControl.message(posmsgPos[data[playerName]['position']])
-                    xPos = pointPositions[playerName][6][0]
-                    yPos = pointPositions[playerName][6][1]
-                    uiControl.move(playerName, xPos, yPos)
-                    data[playerName]['position'] = 6
-                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
-                    data[playerName]['balance'] = data[playerName]['balance'] - 195
-                    uiControl.score.status(playerName, 'В игре', 'В НГУ')
-                    data[playerName]['countNSU'] = 2
+                    nsuAdmition()
+
                 else:
-                    
-                    costData = []
-                    with open('data/cost.txt') as file:
-                        for line in file.readlines():
-                            p = line.rstrip('\n')
-                            costData.append(int(p))
-
-                    rentData = []
-                    with open('data/rent.txt') as file:
-                        for line in file.readlines():
-                            p = line.rstrip('\n').split(' ')
-                            rentData.append([int(p[0]), int(p[1])])
-
-                    pointsData = []
-                    with open('data/points.txt', encoding="utf-8") as file:
-                        for line in file.readlines():
-                            pointsData.append(line.rstrip('\n'))
-
-                    streetsCombin = [[1,3],[5,7,8],[10,13,14],[16,17,19],[21,23],[2,11],[4,15,22]]
-                    combin_flag = False
                     used_flag = True
                     mine_flag = False
+
                     for NamePlayer in playerNames:
                         if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
                             mine_flag = True
                             continue
+
                         if data[playerName]['position'] in data[NamePlayer]['property']:
                             used_flag = False
                             #uiControl.message(f'Этот объект пренадлежит игроку "{data[NamePlayer]["name"]}"')
-                            for streetCombin in streetsCombin:
-                                if data[playerName]['position'] in streetCombin:
-                                    if set(streetCombin).issubset(set(data[NamePlayer]['property'])):
-                                        combin_flag = True
-                                    break
-                            if combin_flag:
-                                uiControl.message(f'Этот объект пренадлежит игроку "{data[NamePlayer]["name"]}". Заплатите ему {rentData[data[playerName]["position"]][1]}₽, для этого введите - "p"')
-                                decision = uiControl.readData(data[playerName]['name'])
-
-                                if decision == 'p':
-                                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - rentData[data[playerName]['position']][1])
-                                    data[playerName]['balance'] -= rentData[data[playerName]['position']][1]
-
-                                    uiControl.score.balance(NamePlayer, data[NamePlayer]['balance'], data[NamePlayer]['balance'] + rentData[data[playerName]['position']][1])
-                                    data[NamePlayer]['balance'] += rentData[data[NamePlayer]['position']][1]
-
-                                    break
-                            else:
-                                uiControl.message(f'Этот объект пренадлежит игроку "{data[NamePlayer]["name"]}". Заплатите ему {rentData[data[playerName]["position"]][0]}₽, для этого введите - "p"')
-                                decision = uiControl.readData(data[playerName]['name'])
-
-                                if decision == 'p':
-                                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - rentData[data[playerName]['position']][0])
-                                    data[playerName]['balance'] -= rentData[data[playerName]['position']][0]
-
-                                    uiControl.score.balance(NamePlayer, data[NamePlayer]['balance'], data[NamePlayer]['balance'] + rentData[data[playerName]['position']][0])
-                                    data[NamePlayer]['balance'] += rentData[data[NamePlayer]['position']][0]
-
-                                    break
+                            propertyPayment()
+                            break
 
                     if used_flag:
                         if mine_flag:
                             uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
                             continue
-                        uiControl.message('Если хотите купить этот объект - введите "y". В противном случае "n"')
-                        decision = uiControl.readData(data[playerName]['name'])
-                        if decision == 'y':
-                            if data[playerName]['balance'] >= costData[data[playerName]['position']]:
-                                data[playerName]['property'].append(data[playerName]['position'])
-                                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - costData[data[playerName]['position']])
-                                data[playerName]['balance'] -= costData[data[playerName]['position']]
-                                uiControl.score.property.add(playerName, pointsData[data[playerName]['position']])
-                                uiControl.message('Поздравляем с покупкой!')
-                            else:
-                                uiControl.message('Недостаточно денег!')
-                        elif decision == 'n':
-                            pass
+
+                        propertyPurch()
+
             else:
-                uiControl.message(f"{data[playerName]['name']} пропускает ход, так как он учится")
-                data[playerName]['countNSU'] -= 1
-                print(data[playerName]['countNSU'])
+                strokeLoss()
+
+
 def main():
     global ex
     global dataReadyEvent
