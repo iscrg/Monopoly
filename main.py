@@ -402,6 +402,8 @@ def backend():
 
     playersQuantity = 0
 
+    countMoves = 0
+
     streetsCombin = [[1,3],[5,7,8],[10,13,14],[16,17,19],[21,23],[2,11],[4,15,22]]
 
     pointPositions = {
@@ -500,8 +502,7 @@ def backend():
             while propPos not in data[playerName]['property']:
                 uiControl.message(f'{data[playerName]["name"]}, введите корректное название объекта.')
                 prop = uiControl.readData(data[playerName]['name'])
-            
-            propPos = pointsData.index(prop)
+                propPos = pointsData.index(prop)
 
             data[playerName]['property'].remove(propPos)
             uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + costData[propPos])
@@ -777,6 +778,8 @@ def backend():
         nonlocal posmsgPos
         nonlocal diceMessages
         nonlocal pointPositions
+        
+        countMoves = 0
 
         uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "k"')
         decision = uiControl.readData(data[playerName]['name'])
@@ -790,11 +793,16 @@ def backend():
 
             if playerPos + dice_number > 23:
                 playerPos = dice_number - (24-playerPos)
-
+                countMoves += 1
                 xPos = pointPositions[playerName][playerPos][0]
                 yPos = pointPositions[playerName][playerPos][1]
 
                 uiControl.move(playerName, xPos, yPos)
+                if countMoves > 0:
+                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
+                    data[playerName]['balance'] += 100
+                    uiControl.message('Вы прошли круг, получите 100₽')
+                    countMoves = 0
 
             else:
                 playerPos += dice_number
@@ -819,7 +827,6 @@ def backend():
         for streetCombin in streetsCombin:
             if data[playerName]['position'] in streetCombin:
                 if set(streetCombin).issubset(set(data[NamePlayer]['property'])):
-                    print('+++')
                     combin_flag = True
                 break
 
@@ -847,13 +854,11 @@ def backend():
 
         uiControl.message(f"{data[playerName]['name']} пропускает ход, так как он учится")
         data[playerName]['countNSU'] -= 1
-        print(data[playerName]['countNSU'])
 
     startgame()
 
     while len(playerNames) > 1:
         for playerName in playerNames:
-            print(data['kapy']['balance'], data['dog']['balance'])
             if data[playerName]['countNSU'] <= 0:
 
                 moveMechanism()
