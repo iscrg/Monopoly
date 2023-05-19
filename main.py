@@ -581,6 +581,7 @@ def backend():
 
     def eventHandler():
         nonlocal data
+        nonlocal playerName
 
         event = random.randint(0,9)
 
@@ -712,6 +713,9 @@ def backend():
             pass
 
     def nsuAdmition():
+        nonlocal data
+        nonlocal playerName
+
         uiControl.message(posmsgPos[data[playerName]['position']])
 
         xPos = pointPositions[playerName][6][0]
@@ -726,6 +730,9 @@ def backend():
         data[playerName]['countNSU'] = 2
 
     def moveMechanism():
+        nonlocal data
+        nonlocal playerName
+
         uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "y"')
         decision = uiControl.readData(data[playerName]['name'])
 
