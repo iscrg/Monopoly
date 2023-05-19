@@ -555,6 +555,9 @@ def backend():
             pointsData.append(line.rstrip('\n'))
 
     def startgame():
+        nonlocal playersQuantity
+        nonlocal playerNames
+
         while True:
             uiControl.message('Введите количество игроков от 2 до 4.')
             playersQuantity = uiControl.readData('Игрок')
