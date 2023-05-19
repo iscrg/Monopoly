@@ -277,8 +277,8 @@ class uiControl():
         elif player == 'parrot':
             ui.parrotEnable(ex, value)
 
-    def endImg(value):
-        ui.endImgHide(ex, value)
+    def endImg():
+        ui.endImgHide(ex)
 
 
 def backend():
@@ -478,37 +478,38 @@ def backend():
                 
             break
     
-    def propertySell():
+    def propertySell(limit):
         nonlocal playerNames
         nonlocal data
         nonlocal playerName
         nonlocal costData
         nonlocal pointsData
-
-        if len(data[playerName]['property']) == 0:
-            uiControl.message(f'{data[playerName]["name"]}, на вашем счёте недостаточно средств. У вас отсутствует недвижимость для продажи - вы банкрот! Вы покидаете Академгородок!')
-            playerNames.remove(playerName)
-            uiControl.score.status(playerName, data[playerName]['status'], 'Не в игре')
-            uiControl.hide(playerName, True)
-        else:
-            uiControl.message(f'{data[playerName]["name"]}, на вашем счёте недостаточно средств. У вас есть недвижимость для продажи. Введите название объекта, который хотите продать!')
-            prop = uiControl.readData(data[playerName]['name'])
-            while prop not in pointsData:
-                uiControl.message(f'{data[playerName]["name"]}, введите корректное название объекта.')
+        while data[playerName]['balance'] < limit:
+            if len(data[playerName]['property']) == 0:
+                uiControl.message(f'{data[playerName]["name"]}, на вашем счёте недостаточно средств. У вас отсутствует недвижимость для продажи - вы банкрот! Вы покидаете Академгородок!')
+                playerNames.remove(playerName)
+                uiControl.score.status(playerName, data[playerName]['status'], 'Не в игре')
+                uiControl.hide(playerName, True)
+                break
+            else:
+                uiControl.message(f'{data[playerName]["name"]}, на вашем счёте недостаточно средств. У вас есть недвижимость для продажи. Введите название объекта, который хотите продать!')
                 prop = uiControl.readData(data[playerName]['name'])
+                while prop not in pointsData:
+                    uiControl.message(f'{data[playerName]["name"]}, введите корректное название объекта.')
+                    prop = uiControl.readData(data[playerName]['name'])
 
-            propPos = pointsData.index(prop)
-
-            while propPos not in data[playerName]['property']:
-                uiControl.message(f'{data[playerName]["name"]}, введите корректное название объекта.')
-                prop = uiControl.readData(data[playerName]['name'])
                 propPos = pointsData.index(prop)
 
-            data[playerName]['property'].remove(propPos)
-            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + costData[propPos])
-            data[playerName]['balance'] += costData[propPos]
-            uiControl.message(f'{data[playerName]["name"]}, вы успешно продали {prop} по цене {costData[propPos]}₽.')
-            uiControl.score.property.remove(playerName,pointsData[propPos])
+                while propPos not in data[playerName]['property']:
+                    uiControl.message(f'{data[playerName]["name"]}, введите корректное название объекта.')
+                    prop = uiControl.readData(data[playerName]['name'])
+                    propPos = pointsData.index(prop)
+
+                data[playerName]['property'].remove(propPos)
+                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + costData[propPos])
+                data[playerName]['balance'] += costData[propPos]
+                uiControl.message(f'{data[playerName]["name"]}, вы успешно продали {prop} по цене {costData[propPos]}₽.')
+                uiControl.score.property.remove(playerName,pointsData[propPos])
 
     def eventHandler():
         nonlocal data
@@ -531,8 +532,7 @@ def backend():
                 uiControl.move(playerName, xPos, yPos)
                 data[playerName]['position'] = 6
 
-                while data[playerName]['balance'] < 195:
-                    propertySell()
+                propertySell(195)
                 if data[playerName]['status'] != 'Не в игре':
                     uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
                     data[playerName]['balance'] = data[playerName]['balance'] - 195
@@ -684,8 +684,7 @@ def backend():
             elif event == 7:
                 uiControl.message(eventsData[event])
 
-                while data[playerName]['balance'] < 70:
-                    propertySell()
+                propertySell(70)
                 if data[playerName]['status'] != 'Не в игре':
                     uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
                     data[playerName]['balance'] = data[playerName]['balance'] - 70
@@ -723,8 +722,7 @@ def backend():
             
             elif event == 9:
                 uiControl.message(eventsData[event])
-                while data[playerName]['balance'] < 70:
-                    propertySell()
+                propertySell(70)
                 if data[playerName]['status'] != 'Не в игре':
                     uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
                     data[playerName]['balance'] = data[playerName]['balance'] - 70
@@ -763,8 +761,7 @@ def backend():
         uiControl.move(playerName, xPos, yPos)
         data[playerName]['position'] = 6
 
-        while data[playerName]['balance'] < 195:
-            propertySell()
+        propertySell(195)
         if data[playerName]['status'] != 'Не в игре':
             uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
             data[playerName]['balance'] = data[playerName]['balance'] - 195
@@ -839,8 +836,7 @@ def backend():
         decision = uiControl.readData(data[playerName]['name'])
 
         if decision == 'p':
-            while data[playerName]['balance'] < rentData[data[playerName]['position']][cost]:
-                propertySell()
+            propertySell(rentData[data[playerName]['position']][cost])
             if data[playerName]['status'] != 'Не в игре':     
                 uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - rentData[data[playerName]['position']][cost])
                 data[playerName]['balance'] -= rentData[data[playerName]['position']][cost]
