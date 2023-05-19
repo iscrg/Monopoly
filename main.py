@@ -444,6 +444,7 @@ def backend():
     def startgame():
         nonlocal playersQuantity
         nonlocal playerNames
+        nonlocal data
 
         while True:
             uiControl.message('Введите количество игроков от 2 до 4.')
@@ -462,8 +463,9 @@ def backend():
                 uiControl.hide(playerName, False)
                 uiControl.score.balance(playerName, 0, 1000)
                 data[playerName]['balance'] = 1000
+                data[playerName]['status'] = 'В игре'
                 uiControl.score.status(playerName, 'Не в игре', 'В игре')
-
+                
             break
     
     def propertySell():
@@ -704,7 +706,7 @@ def backend():
         if decision == 'p':
             while data[playerName]['balance'] < rentData[data[playerName]['position']][cost]:
                 propertySell()
-            if data[playerName]['status'] != 'Не в игре':            
+            if data[playerName]['status'] != 'Не в игре':     
                 uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - rentData[data[playerName]['position']][cost])
                 data[playerName]['balance'] -= rentData[data[playerName]['position']][cost]
 

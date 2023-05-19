@@ -11,17 +11,24 @@ PROPPURCH = 'Если хотите купить этот объект - введ
 CONGRATULATION = 'Поздравляем с покупкой!'
 NOMONEY = 'Недостаточно денег!'
 
+
+def 
+
+
 def DROPDICE(playerName):
     msg = f'{playerName}, чтобы кинуть кубик - введите "y"'
     return msg
+
 
 def OWNERSHIP(playerName, valueMoney):
     msg = f'Этот объект пренадлежит игроку "{playerName}". Заплатите ему {valueMoney}₽, для этого введите - "p"'
     return msg
 
+
 def SKIPMOVE(playerName):
     msg = f"{playerName} пропускает ход, так как он учится"
     return msg
+
 
 if __name__ == '__main__':
     DROPDICE()
