@@ -580,6 +580,8 @@ def backend():
             break
 
     def eventHandler():
+        nonlocal data
+
         event = random.randint(0,9)
 
         uiControl.message(posmsgPos[data[playerName]['position']])
