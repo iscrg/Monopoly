@@ -31,6 +31,7 @@ class ui(QMainWindow):
         self.ui.gazmanovPlayer.setHidden(True)
         self.ui.parrotScore.setHidden(True)
         self.ui.parrotPlayer.setHidden(True)
+        self.ui.endImg.setHidden(True)
 
         # Connect to button
         self.ui.pushButton.clicked.connect(self.readValue)
@@ -127,6 +128,9 @@ class ui(QMainWindow):
     # Dice control
     def dice(self, value):
         self.ui.imgDice.setPixmap(QtGui.QPixmap(f"img/dice/{value}.png"))
+
+    def endImgHide(self):
+        self.ui.endImg.setHidden(False)
 
 
 # Adding signals for edit score tables.
@@ -272,6 +276,9 @@ class uiControl():
 
         elif player == 'parrot':
             ui.parrotEnable(ex, value)
+
+    def endImg(value):
+        ui.endImgHide(ex, value)
 
 
 def backend():
@@ -470,6 +477,7 @@ def backend():
             break
     
     def propertySell():
+        nonlocal playerNames
         nonlocal data
         nonlocal playerName
         nonlocal costData
@@ -491,7 +499,7 @@ def backend():
 
             while propPos not in data[playerName]['property']:
                 uiControl.message(f'{data[playerName]["name"]}, введите корректное название объекта.')
-                prop = uiControl.readData(playerName)
+                prop = uiControl.readData(data[playerName]['name'])
             
             propPos = pointsData.index(prop)
 
@@ -811,6 +819,7 @@ def backend():
         for streetCombin in streetsCombin:
             if data[playerName]['position'] in streetCombin:
                 if set(streetCombin).issubset(set(data[NamePlayer]['property'])):
+                    print('+++')
                     combin_flag = True
                 break
 
@@ -830,7 +839,7 @@ def backend():
                 data[playerName]['balance'] -= rentData[data[playerName]['position']][cost]
 
                 uiControl.score.balance(NamePlayer, data[NamePlayer]['balance'], data[NamePlayer]['balance'] + rentData[data[playerName]['position']][cost])
-                data[NamePlayer]['balance'] += rentData[data[NamePlayer]['position']][cost]
+                data[NamePlayer]['balance'] += rentData[data[playerName]['position']][cost]
 
     def strokeLoss():
         nonlocal playerName
@@ -842,8 +851,9 @@ def backend():
 
     startgame()
 
-    while True:
+    while len(playerNames) > 1:
         for playerName in playerNames:
+            print(data['kapy']['balance'], data['dog']['balance'])
             if data[playerName]['countNSU'] <= 0:
 
                 moveMechanism()
@@ -882,6 +892,9 @@ def backend():
 
             else:
                 strokeLoss()
+
+    uiControl.message(f'{playerNames[0]}, поздравляем, ты победил, возьми с полки пирожок и возвращайся за новым! Андрей Геннадьевич, проверьте досрок, пожалуйста...')
+    uiControl.endImg()
 
 
 def main():

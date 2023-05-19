@@ -363,6 +363,25 @@ p, li { white-space: pre-wrap; }
      <pixmap>img/dice/1.png</pixmap>
     </property>
    </widget>
+   <widget class="QLabel" name="endImg">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>60</y>
+      <width>811</width>
+      <height>711</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>img/finish.jpg</pixmap>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
