@@ -296,7 +296,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>img/kapy.png</pixmap>
+     <pixmap>img/players/kapy.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="dogPlayer">
@@ -312,7 +312,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>img/dog.png</pixmap>
+     <pixmap>img/players/dog.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="parrotPlayer">
@@ -328,7 +328,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>img/parrot.png</pixmap>
+     <pixmap>img/players/parrot.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="gazmanovPlayer">
