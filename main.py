@@ -34,6 +34,7 @@ class ui(QMainWindow):
 
         # Connect to button
         self.ui.pushButton.clicked.connect(self.readValue)
+        self.ui.inputLine.returnPressed.connect(self.readValue)
 
     # Printing message
     def printMessageEvnt(self, value):
