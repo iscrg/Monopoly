@@ -440,7 +440,9 @@ def backend():
 
         decision = uiCtrl.readData(data[pName]['name'])
 
-        if decision == 'y':
+        while decision != 'y':
+            uiCtrl.message('dev', 'Введите "y"')
+            decision = uiCtrl.readData(data[pName]['name'])
 
             if event == 0:
                 uiCtrl.message('dev', evnData[event])
@@ -668,6 +670,10 @@ def backend():
         uiCtrl.message('dev', 'Если хотите купить этот объект - введите "b". В противном случае "n"')
         decision = uiCtrl.readData(data[pName]['name'])
 
+        while decision != 'b' and decision != 'n':
+            uiCtrl.message('dev', 'Если хотите купить этот объект - введите "b". В противном случае "n"')
+            decision = uiCtrl.readData(data[pName]['name']) 
+
         if decision == 'b':
             if data[pName]['bs'] >= costData[data[pName]['position']]:
                 data[pName]['property'].append(data[pName]['position'])
@@ -705,6 +711,7 @@ def backend():
             data[pName]['bs'] = data[pName]['bs'] - 195
 
             uiCtrl.score.status(pName, 'В игре', 'В НГУ')
+            data[pName]['status'] = 'В НГУ'
             data[pName]['countNSU'] = 2
 
     def moveMechanism():
@@ -718,6 +725,10 @@ def backend():
 
         uiCtrl.message('dev', f'{data[pName]["name"]}, чтобы кинуть кубик - введите "k"')
         decision = uiCtrl.readData(data[pName]['name'])
+
+        while decision != 'k':
+            uiCtrl.message('dev', f'{data[pName]["name"]}, чтобы кинуть кубик - введите "k"')
+            decision = uiCtrl.readData(data[pName]['name'])
 
         if decision == 'k':
             dice_number = random.randint(1, 6)
@@ -775,6 +786,10 @@ def backend():
         uiCtrl.message('dev', f'Этот объект пренадлежит игроку "{data[pName_]["name"]}". Заплатите ему {rentData[data[pName]["position"]][cost]}₽, для этого введите - "p"')
         decision = uiCtrl.readData(data[pName]['name'])
 
+        while decision != 'p':
+            uiCtrl.message('dev', f'Вы промазали по клавиатуре, введите - "p"')
+            decision = uiCtrl.readData(data[pName]['name'])
+
         if decision == 'p':
             propertySell(rentData[data[pName]['position']][cost])
             if data[pName]['status'] != 'Не в игре':
@@ -803,6 +818,9 @@ def backend():
 
             uiCtrl.message('separator', None)
             if data[pName]['countNSU'] <= 0:
+                
+                uiCtrl.score.status(pName, data[pName]['status'] , 'В игре')
+                data[pName]['status'] = 'В игре'
 
                 moveMechanism()
                 if data[pName]['position'] in [9, 20]:
