@@ -43,10 +43,6 @@ class ui(QMainWindow):
 
     def printMessage(self, msg):
         self.ui.console.append(f'<span style=" font-size:12pt;">{msg}</span></body></html>')
-        #html = self.ui.console.toHtml()
-        #html = html.replace('<hr /></body></html>', f'<span style=" font-size:12pt;">{msg}</span></body></html>')
-        #print(html)
-        #self.ui.console.setHtml(html)
         
 
     # Reading data from chat.
