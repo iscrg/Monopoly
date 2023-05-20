@@ -1,4 +1,5 @@
 import threading
+import time
 import sys
 import random
 from PyQt5.QtWidgets import QApplication, QMainWindow
@@ -35,15 +36,24 @@ class ui(QMainWindow):
         self.ui.endImg.setHidden(True)
 
         # Connect to button
-        self.ui.pushButton.clicked.connect(self.readValue)
         self.ui.inputLine.returnPressed.connect(self.readValue)
+        self.ui.pushButton.clicked.connect(self.readValue)
 
     # Printing message
     def printMessageEvnt(self, value):
         self.sgnl.consoleMessageSgnl.emit(value)
 
+<<<<<<< Updated upstream
     def printMessage(self, value):
         self.ui.console.append(f'<span style="font-weight:600;font-size:12pt;"> [{ru_local.DEVELOPERS}]</span> <span style="font-size:12pt;">{value}</span>')
+=======
+    def printMessage(self, msg):
+        #self.ui.console.append(msg)
+        html = self.ui.console.toHtml()
+        html = html.replace('</p></body></html>', f'<span style=" font-size:12pt;">{msg}<hr /></span>')
+        self.ui.console.setHtml(html)
+        
+>>>>>>> Stashed changes
 
     # Reading data from chat.
     def buttonEnadle(self):
@@ -174,96 +184,75 @@ class uiControl():
     class score():
         class property():
             def add(player, value):
+                initValue = '</p></body></html>'
+                finalValue = f'<br /><span style="font-weight:600;font-size:10pt;"> [{value}]</span></p></body></html>'
 
                 if player == 'kapy':
-                    initValue = '</p></body></html>'
-                    finalValue = f'<br />{value}</p></body></html>'
                     ui.kapyTextEditEvnt(ex, initValue, finalValue)
 
                 elif player == 'dog':
-                    initValue = '</p></body></html>'
-                    finalValue = f'<br />{value}</p></body></html>'
                     ui.dogTextEditEvnt(ex, initValue, finalValue)
 
                 elif player == 'gazmanov':
-                    initValue = '</p></body></html>'
-                    finalValue = f'<br />{value}</p></body></html>'
                     ui.gazmanovTextEditEvnt(ex, initValue, finalValue)
 
                 elif player == 'parrot':
-                    initValue = '</p></body></html>'
-                    finalValue = f'<br />{value}</p></body></html>'
                     ui.parrotTextEditEvnt(ex, initValue, finalValue)
 
             def remove(player, value):
+                initValue = f'<br /><span style="font-weight:600;font-size:10pt;"> [{value}]</span>'
+                finalValue = ''
 
                 if player == 'kapy':
-                    initValue = f'<br />{value}'
-                    finalValue = ''
                     ui.kapyTextEditEvnt(ex, initValue, finalValue)
 
                 elif player == 'dog':
-                    initValue = f'<br />{value}'
-                    finalValue = ''
                     ui.dogTextEditEvnt(ex, initValue, finalValue)
 
                 elif player == 'gazmanov':
-                    initValue = f'<br />{value}'
-                    finalValue = ''
                     ui.gazmanovTextEditEvnt(ex, initValue, finalValue)
 
                 elif player == 'parrot':
-                    initValue = f'<br />{value}'
-                    finalValue = ''
                     ui.parrotTextEditEvnt(ex, initValue, finalValue)
 
         def balance(player, initValue, finalValue):
+            initValue_ = f'>{initValue}<'
+            finalValue_ = f'>{finalValue}<'
+
             if player == 'kapy':
-                initValue_ = f'>{initValue}<'
-                finalValue_ = f'>{finalValue}<'
                 ui.kapyTextEditEvnt(ex, initValue_, finalValue_)
 
             elif player == 'dog':
-                initValue_ = f'>{initValue}<'
-                finalValue_ = f'>{finalValue}<'
                 ui.dogTextEditEvnt(ex, initValue_, finalValue_)
 
             elif player == 'gazmanov':
-                initValue_ = f'>{initValue}<'
-                finalValue_ = f'>{finalValue}<'
                 ui.gazmanovTextEditEvnt(ex, initValue_, finalValue_)
 
             elif player == 'parrot':
-                initValue_ = f'>{initValue}<'
-                finalValue_ = f'>{finalValue}<'
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
         def status(player, initValue, finalValue):
+            initValue_ = f'>{initValue}<'
+            finalValue_ = f'>{finalValue}<'
+
             if player == 'kapy':
-                initValue_ = f'>{initValue}<'
-                finalValue_ = f'>{finalValue}<'
                 ui.kapyTextEditEvnt(ex, initValue_, finalValue_)
 
             elif player == 'dog':
-                initValue_ = f'>{initValue}<'
-                finalValue_ = f'>{finalValue}<'
                 ui.dogTextEditEvnt(ex, initValue_, finalValue_)
 
             elif player == 'gazmanov':
-                initValue_ = f'>{initValue}<'
-                finalValue_ = f'>{finalValue}<'
                 ui.gazmanovTextEditEvnt(ex, initValue_, finalValue_)
 
             elif player == 'parrot':
-                initValue_ = f'>{initValue}<'
-                finalValue_ = f'>{finalValue}<'
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
     def diceValue(value):
         ui.dice(ex, value)
 
     def message(value):
-        ui.printMessageEvnt(ex, value)
+        msg = f'<span style="font-weight:600;font-size:12pt;"> [Сказочные Разработчики]</span> <span style="font-size:12pt;">{value}</span>'
+        ui.printMessageEvnt(ex, msg)
 
     def hide(player, value):
         if player == 'kapy':
@@ -280,6 +269,9 @@ class uiControl():
 
     def endImg():
         ui.endImgHide(ex)
+
+    def separator():
+        ui.printMessage(ex, '<hr />')
 
 
 def backend():
@@ -474,9 +466,14 @@ def backend():
                 uiControl.hide(playerName, False)
                 uiControl.score.balance(playerName, 0, 1000)
                 data[playerName]['balance'] = 1000
+<<<<<<< Updated upstream
                 data[playerName]['status'] = ru_local.INGAME
                 uiControl.score.status(playerName, ru_local.LEFTGAME, ru_local.INGAME)
                 
+=======
+                data[playerName]['status'] = 'В игре'
+                uiControl.score.status(playerName, 'Не в игре', 'В игре')
+>>>>>>> Stashed changes
             break
     
     def propertySell(limit):
@@ -836,7 +833,6 @@ def backend():
         data[playerName]['countNSU'] -= 1
 
     startgame()
-
     while len(playerNames) > 1:
         for playerName in playerNames:
             if data[playerName]['countNSU'] <= 0:
