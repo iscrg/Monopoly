@@ -252,6 +252,7 @@ class uiCtrl():
             txt = ru_local.DEVELOPERSMSG(txt)
         elif type_ == 'separator':
             txt = '<hr>'
+
         ui.printMessageEvnt(ex, txt)
 
     # Function to hide players from gaming field and from the score table.
@@ -358,14 +359,15 @@ def main():
 
         # Cycle to read quantity of players
         while True:
-            uiCtrl.msg('dev', ru_local.PLAYER_NUM)
             playersQuantity = uiCtrl.readData(ru_local.PLAYER)
 
             try:
                 playersQuantity = int(playersQuantity)
                 if not (2 <= playersQuantity <= 4):
+                    uiCtrl.msg('dev', ru_local.PLAYER_NUM)
                     continue
             except ValueError:
+                uiCtrl.msg('dev', ru_local.PLAYER_NUM)
                 continue
 
             pNames = pNames[:playersQuantity]
@@ -845,6 +847,7 @@ def main():
 
     # Main cycle
     startgame()
+
     while len(pNames) > 1:
         for pName in pNames:
 
