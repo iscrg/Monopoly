@@ -1,9 +1,9 @@
 import threading
 import sys
 import random
+import ru_local
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import uic, QtGui, QtCore
-
 
 class ui(QMainWindow):
     def __init__(self):
@@ -132,7 +132,6 @@ class ui(QMainWindow):
     def endImgHide(self):
         self.ui.endImg.setHidden(False)
 
-
 # Adding signals for edit score tables.
 class Signals(QtCore.QObject):
     kapyTextEditSgnl = QtCore.pyqtSignal(str, str)
@@ -140,7 +139,6 @@ class Signals(QtCore.QObject):
     gazmanovTextEditSgnl = QtCore.pyqtSignal(str, str)
     parrotTextEditSgnl = QtCore.pyqtSignal(str, str)
     consoleMessageSgnl = QtCore.pyqtSignal(str)
-
 
 # Class for controlling UI.
 class uiCtrl():
@@ -241,7 +239,7 @@ class uiCtrl():
 
     def message(type_, msg):
         if type_ == 'dev':
-            msg = f'<span style="font-weight:600;font-size:12pt;">[Сказочные Разработчики]</span> <span style="font-size:12pt;">{msg}</span>'
+            msg = f'<span style="font-weight:600;font-size:12pt;">[{ru_local.DEVELOPERS}]</span> <span style="font-size:12pt;">{msg}</span>'
         elif type_ == 'separator':
             msg = '<hr>'
         ui.printMessageEvnt(ex, msg)
@@ -262,47 +260,42 @@ class uiCtrl():
     def endImg():
         ui.endImgHide(ex)
 
-
 def backend():
     pNames = ['kapy', 'dog', 'gazmanov', 'parrot']
 
     data = {
         'kapy': {
-            'name': 'Капибара',
-            'bs': 0,
-            'status': 'Не в игре',
+            'name': f'{ru_local.KAPY}',
+            'balance': 0,
+            'status': f'{ru_local.LEFTGAME}',
             'position': 0,
             'property': [],
             'countNSU': 0
         },
-
         'dog': {
-            'name': 'Опухший пес',
-            'bs': 0,
-            'status': 'Не в игре',
+            'name': f'{ru_local.DOG}',
+            'balance': 0,
+            'status': f'{ru_local.LEFTGAME}',
             'position': 0,
             'property': [],
             'countNSU': 0
         },
-
         'gazmanov': {
-            'name': 'Олег Газманов',
-            'bs': 0,
-            'status': 'Не в игре',
+            'name': f'{ru_local.GAZMANOV}',
+            'balance': 0,
+            'status': f'{ru_local.LEFTGAME}',
             'position': 0,
             'property': [],
             'countNSU': 0
         },
-
         'parrot': {
-            'name': 'Попуг',
-            'bs': 0,
-            'status': 'Не в игре',
+            'name': f'{ru_local.PARROT}',
+            'balance': 0,
+            'status': f'{ru_local.LEFTGAME}',
             'position': 0,
             'property': [],
             'countNSU': 0
         }
-
     }
 
     playersQuantity = 0
@@ -368,8 +361,8 @@ def backend():
         nonlocal data
 
         while True:
-            uiCtrl.message('dev', 'Введите количество игроков от 2 до 4.')
-            playersQuantity = uiCtrl.readData('Игрок')
+            uiCtrl.message('dev', ru_local.PLAYER_NUM)
+            playersQuantity = uiCtrl.readData(ru_local.PLAYER)
 
             try:
                 playersQuantity = int(playersQuantity)
@@ -384,8 +377,8 @@ def backend():
                 uiCtrl.hide(pName, False)
                 uiCtrl.score.bs(pName, 0, 1000)
                 data[pName]['bs'] = 1000
-                data[pName]['status'] = 'В игре'
-                uiCtrl.score.status(pName, 'Не в игре', 'В игре')
+                data[pName]['status'] = ru_local.INGAME
+                uiCtrl.score.status(pName, ru_local.LEFTGAME, ru_local.INGAME)
             break
 
     def propertySell(limit):
@@ -401,7 +394,7 @@ def backend():
                 pNames.remove(pName)
 
                 pStatus = data[pName]['status']
-                uiCtrl.score.status(pName, pStatus, 'Не в игре')
+                uiCtrl.score.status(pName, pStatus, ru_local.LEFTGAME)
                 uiCtrl.hide(pName, True)
 
                 break
@@ -441,7 +434,7 @@ def backend():
         decision = uiCtrl.readData(data[pName]['name'])
 
         while decision != 'y':
-            uiCtrl.message('dev', 'Введите "y"')
+            uiCtrl.message('dev', ru_local.Y)
             decision = uiCtrl.readData(data[pName]['name'])
 
             if event == 0:
@@ -454,13 +447,13 @@ def backend():
                 data[pName]['position'] = 6
 
                 propertySell(195)
-                if data[pName]['status'] != 'Не в игре':
+                if data[pName]['status'] != ru_local.LEFTGAME:
                     uiCtrl.score.bs(pName,
                                     data[pName]['bs'],
                                     data[pName]['bs'] - 195)
                     data[pName]['bs'] = data[pName]['bs'] - 195
 
-                    uiCtrl.score.status(pName, 'В игре', 'В НГУ')
+                    uiCtrl.score.status(pName, ru_local.INGAME, ru_local.INNSU)
                     data[pName]['countNSU'] = 2
 
             elif event == 1:
@@ -613,7 +606,7 @@ def backend():
                 uiCtrl.message('dev', evnData[event])
 
                 propertySell(70)
-                if data[pName]['status'] != 'Не в игре':
+                if data[pName]['status'] !=  ru_local.LEFTGAME:
                     uiCtrl.score.bs(pName,
                                     data[pName]['bs'],
                                     data[pName]['bs'] - 70)
@@ -655,7 +648,7 @@ def backend():
             elif event == 9:
                 uiCtrl.message('dev', evnData[event])
                 propertySell(70)
-                if data[pName]['status'] != 'Не в игре':
+                if data[pName]['status'] !=  ru_local.LEFTGAME:
                     uiCtrl.score.bs(pName,
                                     data[pName]['bs'],
                                     data[pName]['bs'] - 70)
@@ -667,11 +660,11 @@ def backend():
         nonlocal costData
         nonlocal pointsData
 
-        uiCtrl.message('dev', 'Если хотите купить этот объект - введите "b". В противном случае "n"')
+        uiCtrl.message('dev', ru_local.PROPPURCH)
         decision = uiCtrl.readData(data[pName]['name'])
 
         while decision != 'b' and decision != 'n':
-            uiCtrl.message('dev', 'Если хотите купить этот объект - введите "b". В противном случае "n"')
+            uiCtrl.message('dev', ru_local.PROPPURCH)
             decision = uiCtrl.readData(data[pName]['name']) 
 
         if decision == 'b':
@@ -687,9 +680,9 @@ def backend():
                 uiCtrl.score.property.add(pName,
                                           pointsData[data[pName]['position']])
 
-                uiCtrl.message('dev', 'Поздравляем с покупкой!')
+                uiCtrl.message('dev', ru_local.CONGRATULATION)
             else:
-                uiCtrl.message('dev', 'Недостаточно средств!')
+                uiCtrl.message('dev', ru_local.NOMONEY)
         elif decision == 'n':
             pass
 
@@ -704,14 +697,14 @@ def backend():
         data[pName]['position'] = 6
 
         propertySell(195)
-        if data[pName]['status'] != 'Не в игре':
+        if data[pName]['status'] !=  ru_local.LEFTGAME:
             uiCtrl.score.bs(pName,
                             data[pName]['bs'],
                             data[pName]['bs'] - 195)
             data[pName]['bs'] = data[pName]['bs'] - 195
 
-            uiCtrl.score.status(pName, 'В игре', 'В НГУ')
-            data[pName]['status'] = 'В НГУ'
+            uiCtrl.score.status(pName,  ru_local.INGAME,  ru_local.INNSU)
+            data[pName]['status'] =  ru_local.INNSU
             data[pName]['countNSU'] = 2
 
     def moveMechanism():
@@ -749,7 +742,7 @@ def backend():
                                     data[pName]['bs'],
                                     data[pName]['bs'] + 100)
                     data[pName]['bs'] += 100
-                    uiCtrl.message('dev', 'Вы прошли круг, получите 100₽')
+                    uiCtrl.message('dev', ru_local.CIRCLE)
                     countMoves = 0
 
             else:
@@ -792,7 +785,7 @@ def backend():
 
         if decision == 'p':
             propertySell(rentData[data[pName]['position']][cost])
-            if data[pName]['status'] != 'Не в игре':
+            if data[pName]['status'] !=  ru_local.LEFTGAME:
                 uiCtrl.score.bs(pName,
                                 data[pName]['bs'],
                                 (data[pName]['bs'] -
@@ -819,8 +812,8 @@ def backend():
             uiCtrl.message('separator', None)
             if data[pName]['countNSU'] <= 0:
                 
-                uiCtrl.score.status(pName, data[pName]['status'] , 'В игре')
-                data[pName]['status'] = 'В игре'
+                uiCtrl.score.status(pName, data[pName]['status'] , ru_local.INGAME)
+                data[pName]['status'] = ru_local.INGAME
 
                 moveMechanism()
                 if data[pName]['position'] in [9, 20]:
@@ -863,7 +856,6 @@ def backend():
     uiCtrl.message('dev', f'{pNames[0]}, поздравляем, ты победил, возьми с полки пирожок и возвращайся за новым! Андрей Геннадьевич, проверьте досрок, пожалуйста...')
     uiCtrl.endImg()
 
-
 def main():
     global ex
     global dataReadyEvent
@@ -876,7 +868,6 @@ def main():
     trd.start()
 
     app.exec_()
-
 
 if __name__ == '__main__':
     main()
