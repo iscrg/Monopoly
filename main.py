@@ -1,10 +1,8 @@
 import threading
-import time
 import sys
 import random
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import uic, QtGui, QtCore
-import ru_local
 
 
 class ui(QMainWindow):
@@ -44,10 +42,11 @@ class ui(QMainWindow):
         self.sgnl.consoleMessageSgnl.emit(value)
 
     def printMessage(self, msg):
-        #self.ui.console.append(msg)
-        html = self.ui.console.toHtml()
-        html = html.replace('</p></body></html>', f'<span style=" font-size:12pt;">{msg}<hr /></span>')
-        self.ui.console.setHtml(html)
+        self.ui.console.append(f'<span style=" font-size:12pt;">{msg}</span></body></html>')
+        #html = self.ui.console.toHtml()
+        #html = html.replace('<hr /></body></html>', f'<span style=" font-size:12pt;">{msg}</span></body></html>')
+        #print(html)
+        #self.ui.console.setHtml(html)
         
 
     # Reading data from chat.
@@ -180,7 +179,7 @@ class uiControl():
         class property():
             def add(player, value):
                 initValue = '</p></body></html>'
-                finalValue = f'<br /><span style="font-weight:600;font-size:10pt;"> [{value}]</span></p></body></html>'
+                finalValue = f'<br /><span style="font-size:10pt;">{value}</span></p></body></html>'
 
                 if player == 'kapy':
                     ui.kapyTextEditEvnt(ex, initValue, finalValue)
@@ -195,7 +194,7 @@ class uiControl():
                     ui.parrotTextEditEvnt(ex, initValue, finalValue)
 
             def remove(player, value):
-                initValue = f'<br /><span style="font-weight:600;font-size:10pt;"> [{value}]</span>'
+                initValue = f'<br /><span style="font-size:10pt;">{value}</span></p></body></html>'
                 finalValue = ''
 
                 if player == 'kapy':
@@ -245,8 +244,11 @@ class uiControl():
     def diceValue(value):
         ui.dice(ex, value)
 
-    def message(value):
-        msg = f'<span style="font-weight:600;font-size:12pt;"> [Сказочные Разработчики]</span> <span style="font-size:12pt;">{value}</span>'
+    def message(type_, msg):
+        if type_ == 'dev':
+            msg = f'<span style="font-weight:600;font-size:12pt;">[Сказочные Разработчики]</span> <span style="font-size:12pt;">{msg}</span>'
+        elif type_ == 'separator':
+            msg = '<hr>'
         ui.printMessageEvnt(ex, msg)
 
     def hide(player, value):
@@ -264,9 +266,6 @@ class uiControl():
 
     def endImg():
         ui.endImgHide(ex)
-
-    def separator():
-        ui.printMessage(ex, '<hr />')
 
 
 def backend():
@@ -319,7 +318,7 @@ def backend():
             if data [playerName]['position'] in data[NamePlayer]['property']:
                 pass
         else:
-            uiControl.message(ru_local.PROPPURCH)
+            uiControl.message('dev', "Если хотите купить этот объект - введите 'y'. В противном случае 'n'")
             decision = uiControl.readData(playerName)
             if decision == 'y':
                 if data[playerName]['balance'] >= costData[data[playerName]['position']]:
@@ -327,9 +326,9 @@ def backend():
                     uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - costData[data[playerName]['position']])
                     data[playerName]['balance'] -= costData[data[playerName]['position']]
                     uiControl.score.property.add(playerName, pointsData[data[playerName]['position']])
-                    uiControl.message(ru_local.CONGRATULATION)
+                    uiControl.message('dev', 'Поздравляем с покупкой!')
                 else:
-                    uiControl.message(ru_local.NOMONEY)
+                    uiControl.message('dev', 'Недостаточно денег!')
             elif decision == 'n':
                 pass
                 
@@ -351,36 +350,36 @@ def backend():
 
     data = {
         'kapy': {
-            'name': 'f{KAPY}',
+            'name': 'Капибара',
             'balance': 0,
-            'status': 'f{LEFTGAME}',
+            'status': 'Не в игре',
             'position': 0,
             'property': [],
             'countNSU' : 0
         },
 
         'dog': {
-            'name': 'f{DOG}',
+            'name': 'Опухший пес',
             'balance': 0,
-            'status': 'f{LEFTGAME}',
+            'status': 'Не в игре',
             'position': 0,
             'property': [],
             'countNSU' : 0
         },
 
         'gazmanov': {
-            'name': 'f{GAZMANOV}',
+            'name': 'Олег Газманов',
             'balance': 0,
-            'status': 'f{LEFTGAME}',
+            'status': 'Не в игре',
             'position': 0,
             'property': [],
             'countNSU' : 0
         },
 
         'parrot': {
-            'name': 'f{PARROT}',
+            'name': 'Попуг',
             'balance': 0,
-            'status': 'f{LEFTGAME}',
+            'status': 'Не в игре',
             'position': 0,
             'property': [],
             'countNSU' : 0
@@ -392,7 +391,7 @@ def backend():
 
     countMoves = 0
 
-    streetsCombin = [[1,3],[5,7,8],[10,13,14],[16,17,19],[21,23],[2,11],[4,15,22]]
+    streetsCombin = [[1, 3], [5, 7, 8], [10, 13, 14], [16, 17, 19], [21, 23], [2, 11], [4, 15, 22]]
 
     pointPositions = {
         'kapy': [],
@@ -445,8 +444,8 @@ def backend():
         nonlocal data
 
         while True:
-            uiControl.message(ru_local.PLAYER_NUM)
-            playersQuantity = uiControl.readData(ru_local.PLAYER)
+            uiControl.message('dev', 'Введите количество игроков от 2 до 4.')
+            playersQuantity = uiControl.readData('Игрок')
 
             try:
                 playersQuantity = int(playersQuantity)
@@ -473,29 +472,29 @@ def backend():
         nonlocal pointsData
         while data[playerName]['balance'] < limit:
             if len(data[playerName]['property']) == 0:
-                uiControl.message(f'{data[playerName]["name"]}, на вашем счёте недостаточно средств. У вас отсутствует недвижимость для продажи - вы банкрот! Вы покидаете Академгородок!')
+                uiControl.message('dev', f'{data[playerName]["name"]}, на вашем счёте недостаточно средств. У вас отсутствует недвижимость для продажи - вы банкрот! Вы покидаете Академгородок!')
                 playerNames.remove(playerName)
                 uiControl.score.status(playerName, data[playerName]['status'], 'Не в игре')
                 uiControl.hide(playerName, True)
                 break
             else:
-                uiControl.message(f'{data[playerName]["name"]}, на вашем счёте недостаточно средств. У вас есть недвижимость для продажи. Введите название объекта, который хотите продать!')
+                uiControl.message('dev', f'{data[playerName]["name"]}, на вашем счёте недостаточно средств. У вас есть недвижимость для продажи. Введите название объекта, который хотите продать!')
                 prop = uiControl.readData(data[playerName]['name'])
                 while prop not in pointsData:
-                    uiControl.message(f'{data[playerName]["name"]}, введите корректное название объекта.')
+                    uiControl.message('dev', f'{data[playerName]["name"]}, введите корректное название объекта.')
                     prop = uiControl.readData(data[playerName]['name'])
 
                 propPos = pointsData.index(prop)
 
                 while propPos not in data[playerName]['property']:
-                    uiControl.message(f'{data[playerName]["name"]}, введите корректное название объекта.')
+                    uiControl.message('dev', f'{data[playerName]["name"]}, введите корректное название объекта.')
                     prop = uiControl.readData(data[playerName]['name'])
                     propPos = pointsData.index(prop)
 
                 data[playerName]['property'].remove(propPos)
                 uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + costData[propPos])
                 data[playerName]['balance'] += costData[propPos]
-                uiControl.message(f'{data[playerName]["name"]}, вы успешно продали {prop} по цене {costData[propPos]}₽.')
+                uiControl.message('dev', f'{data[playerName]["name"]}, вы успешно продали {prop} по цене {costData[propPos]}₽.')
                 uiControl.score.property.remove(playerName,pointsData[propPos])
 
     def eventHandler():
@@ -508,128 +507,157 @@ def backend():
 
         decision = uiControl.readData(data[playerName]['name'])
 
-        while decision != 'y':
-            uiControl.message('Введите "y"')
-            decision = uiControl.readData(data[playerName]['name'])
+        if decision == 'y':
 
-        if event == 0:
-            uiControl.message(eventsData[event])
+            if event == 0:
+                uiControl.message('dev', eventsData[event])
 
-            xPos = pointPositions[playerName][6][0]
-            yPos = pointPositions[playerName][6][1]
+                xPos = pointPositions[playerName][6][0]
+                yPos = pointPositions[playerName][6][1]
 
-            uiControl.move(playerName, xPos, yPos)
-            data[playerName]['position'] = 6
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 6
 
-            propertySell(195)
-            if data[playerName]['status'] != ru_local.LEFTGAME:
-                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
-                data[playerName]['balance'] = data[playerName]['balance'] - 195
+                propertySell(195)
+                if data[playerName]['status'] != 'Не в игре':
+                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
+                    data[playerName]['balance'] = data[playerName]['balance'] - 195
 
-                uiControl.score.status(playerName, ru_local.INGAME, ru_local.INNSU)
-                data[playerName]['countNSU'] = 2
+                    uiControl.score.status(playerName, 'В игре', 'В НГУ')
+                    data[playerName]['countNSU'] = 2
                 
             elif event == 1:
-                uiControl.message(eventsData[event])
+                uiControl.message('dev', eventsData[event])
 
-            xPos = pointPositions[playerName][23][0]
-            yPos = pointPositions[playerName][23][1]
+                xPos = pointPositions[playerName][23][0]
+                yPos = pointPositions[playerName][23][1]
 
-            uiControl.move(playerName, xPos, yPos)
-            data[playerName]['position'] = 23
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 23
 
-            used_flag = True
-            mine_flag = False
+                used_flag = True
+                mine_flag = False
 
-            for NamePlayer in playerNames:
-                if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
-                    mine_flag = True
-                    continue
+                for NamePlayer in playerNames:
+                    if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
+                        mine_flag = True
+                        continue
 
-                if data[playerName]['position'] in data[NamePlayer]['property']:
-                    used_flag = False
-                    propertyPayment()
-                    break
+                    if data[playerName]['position'] in data[NamePlayer]['property']:
+                        used_flag = False
+                        propertyPayment()
+                        break
 
-            if used_flag:
-                if mine_flag:
-                    uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
-                else:
-                    propertyPurch()
+                if used_flag:
+                    if mine_flag:
+                        uiControl.message('dev', f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                    else:
+                        propertyPurch()
 
-        elif event == 2:
-            uiControl.message(eventsData[event])
+            elif event == 2:
+                uiControl.message('dev', eventsData[event])
 
-            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
-            data[playerName]['balance'] = data[playerName]['balance'] + 100
-            
-            xPos = pointPositions[playerName][2][0]
-            yPos = pointPositions[playerName][2][1]
-
-            uiControl.move(playerName, xPos, yPos)
-            data[playerName]['position'] = 2
-
-            used_flag = True
-            mine_flag = False
-
-            for NamePlayer in playerNames:
-                if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
-                    mine_flag = True
-                    continue
-
-                if data[playerName]['position'] in data[NamePlayer]['property']:
-                    used_flag = False
-                    propertyPayment()
-                    break
-
-            if used_flag:
-                if mine_flag:
-                    uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
-                else:
-                    propertyPurch()
-        
-        elif event == 3:
-            uiControl.message(eventsData[event])
-
-            uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 50)
-            data[playerName]['balance'] = data[playerName]['balance'] + 50
-
-        elif event == 4:
-            uiControl.message(eventsData[event])
-
-            if data[playerName]['position'] > 19:
                 uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
                 data[playerName]['balance'] = data[playerName]['balance'] + 100
+                
+                xPos = pointPositions[playerName][2][0]
+                yPos = pointPositions[playerName][2][1]
+
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 2
+
+                used_flag = True
+                mine_flag = False
+
+                for NamePlayer in playerNames:
+                    if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
+                        mine_flag = True
+                        continue
+
+                    if data[playerName]['position'] in data[NamePlayer]['property']:
+                        used_flag = False
+                        propertyPayment()
+                        break
+
+                if used_flag:
+                    if mine_flag:
+                        uiControl.message('dev', f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                    else:
+                        propertyPurch()
             
-            xPos = pointPositions[playerName][19][0]
-            yPos = pointPositions[playerName][19][1]
+            elif event == 3:
+                uiControl.message('dev', eventsData[event])
 
-            uiControl.move(playerName, xPos, yPos)
-            data[playerName]['position'] = 19
+                uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 50)
+                data[playerName]['balance'] = data[playerName]['balance'] + 50
 
-            used_flag = True
-            mine_flag = False
+            elif event == 4:
+                uiControl.message('dev', eventsData[event])
 
-            for NamePlayer in playerNames:
-                if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
-                    mine_flag = True
-                    continue
+                if data[playerName]['position'] > 19:
+                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
+                    data[playerName]['balance'] = data[playerName]['balance'] + 100
+                
+                xPos = pointPositions[playerName][19][0]
+                yPos = pointPositions[playerName][19][1]
 
-                if data[playerName]['position'] in data[NamePlayer]['property']:
-                    used_flag = False
-                    propertyPayment()
-                    break
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 19
 
-            if used_flag:
-                if mine_flag:
-                    uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
-                else:
-                    propertyPurch()
-        
-        elif event == 5:
-            uiControl.message(eventsData[event])
+                used_flag = True
+                mine_flag = False
 
-            if data[playerName]['position'] > 15:
+                for NamePlayer in playerNames:
+                    if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
+                        mine_flag = True
+                        continue
+
+                    if data[playerName]['position'] in data[NamePlayer]['property']:
+                        used_flag = False
+                        propertyPayment()
+                        break
+
+                if used_flag:
+                    if mine_flag:
+                        uiControl.message('dev', f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                    else:
+                        propertyPurch()
+            
+            elif event == 5:
+                uiControl.message('dev', eventsData[event])
+
+                if data[playerName]['position'] > 15:
+                    uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
+                    data[playerName]['balance'] = data[playerName]['balance'] + 100
+                
+                xPos = pointPositions[playerName][15][0]
+                yPos = pointPositions[playerName][15][1]
+
+                uiControl.move(playerName, xPos, yPos)
+                data[playerName]['position'] = 15
+
+                used_flag = True
+                mine_flag = False
+
+                for NamePlayer in playerNames:
+                    if NamePlayer == playerName and data[playerName]['position'] in data[NamePlayer]['property']:
+                        mine_flag = True
+                        continue
+
+                    if data[playerName]['position'] in data[NamePlayer]['property']:
+                        used_flag = False
+                        propertyPayment()
+                        break
+
+                if used_flag:
+                    if mine_flag:
+                        uiControl.message('dev', f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                    else:
+                        propertyPurch()
+            
+            elif event == 6:
+                uiControl.message('dev', eventsData[event])
+
                 uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
                 data[playerName]['balance'] = data[playerName]['balance'] + 100
                 
@@ -640,15 +668,15 @@ def backend():
                 data[playerName]['position'] = 0
 
             elif event == 7:
-                uiControl.message(eventsData[event])
+                uiControl.message('dev', eventsData[event])
 
                 propertySell(70)
-                if data[playerName]['status'] != ru_local.LEFTGAME:
+                if data[playerName]['status'] != 'Не в игре':
                     uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
                     data[playerName]['balance'] = data[playerName]['balance'] - 70
 
             elif event == 8:
-                uiControl.message(eventsData[event])
+                uiControl.message('dev', eventsData[event])
 
                 uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 50)
                 data[playerName]['balance'] = data[playerName]['balance'] + 50
@@ -674,14 +702,14 @@ def backend():
 
                 if used_flag:
                     if mine_flag:
-                        uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                        uiControl.message('dev', f'{data[playerName]["name"]}, этот объект принадлежит вам!')
                     else:
                         propertyPurch()
             
             elif event == 9:
-                uiControl.message(eventsData[event])
+                uiControl.message('dev', eventsData[event])
                 propertySell(70)
-                if data[playerName]['status'] != ru_local.LEFTGAME:
+                if data[playerName]['status'] != 'Не в игре':
                     uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 70)
                     data[playerName]['balance'] = data[playerName]['balance'] - 70
 
@@ -691,12 +719,8 @@ def backend():
         nonlocal costData
         nonlocal pointsData
 
-        uiControl.message(ru_local.PROPPURCH)
+        uiControl.message('dev', 'Если хотите купить этот объект - введите "b". В противном случае "n"')
         decision = uiControl.readData(data[playerName]['name'])
-
-        while decision != 'b' and decision != 'n':
-            uiControl.message('Если хотите купить этот объект - введите "b". В противном случае "n"')
-            decision = uiControl.readData(data[playerName]['name']) 
 
         if decision == 'b':
             if data[playerName]['balance'] >= costData[data[playerName]['position']]:
@@ -707,9 +731,9 @@ def backend():
                 data[playerName]['balance'] -= costData[data[playerName]['position']]
                 uiControl.score.property.add(playerName, pointsData[data[playerName]['position']])
                 
-                uiControl.message(ru_local.CONGRATULATION)
+                uiControl.message('dev', 'Поздравляем с покупкой!')
             else:
-                uiControl.message(ru_local.NOMONEY)
+                uiControl.message('dev', 'Недостаточно средств!')
         elif decision == 'n':
             pass
 
@@ -724,11 +748,11 @@ def backend():
         data[playerName]['position'] = 6
 
         propertySell(195)
-        if data[playerName]['status'] != ru_local.LEFTGAME:
+        if data[playerName]['status'] != 'Не в игре':
             uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - 195)
             data[playerName]['balance'] = data[playerName]['balance'] - 195
 
-            uiControl.score.status(playerName, ru_local.INGAME, ru_local.INNSU)
+            uiControl.score.status(playerName, 'В игре', 'В НГУ')
             data[playerName]['countNSU'] = 2
 
     def moveMechanism():
@@ -740,17 +764,13 @@ def backend():
         
         countMoves = 0
 
-        uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "k"')
+        uiControl.message('dev', f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "k"')
         decision = uiControl.readData(data[playerName]['name'])
-
-        while decision != 'k':
-            uiControl.message(f'{data[playerName]["name"]}, чтобы кинуть кубик - введите "k"')
-            decision = uiControl.readData(data[playerName]['name'])
 
         if decision == 'k':
             dice_number = random.randint(1, 6)
             uiControl.diceValue(dice_number)
-            uiControl.message(diceMessages[dice_number-1])
+            uiControl.message('dev', diceMessages[dice_number-1])
 
             playerPos = data[playerName]['position']
 
@@ -764,7 +784,7 @@ def backend():
                 if countMoves > 0:
                     uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] + 100)
                     data[playerName]['balance'] += 100
-                    uiControl.message(ru_local.CIRCLE)
+                    uiControl.message('dev', 'Вы прошли круг, получите 100₽')
                     countMoves = 0
 
             else:
@@ -776,7 +796,7 @@ def backend():
                 uiControl.move(playerName, xPos, yPos)
 
             data[playerName]['position'] = playerPos
-            uiControl.message(posmsgPos[data[playerName]['position']])
+            uiControl.message('dev', posmsgPos[data[playerName]['position']])
 
     def propertyPayment():
         nonlocal streetsCombin
@@ -798,16 +818,14 @@ def backend():
         else:
             cost = 0
 
-        uiControl.message(f'Этот объект пренадлежит игроку "{data[NamePlayer]["name"]}". Заплатите ему {rentData[data[playerName]["position"]][cost]}₽, для этого введите - "p"')
+        uiControl.message('dev', f'Этот объект пренадлежит игроку "{data[NamePlayer]["name"]}". Заплатите ему {rentData[data[playerName]["position"]][cost]}₽, для этого введите - "p"')
         decision = uiControl.readData(data[playerName]['name'])
-
-        while decision != 'p':
-            uiControl.message(f'Вы промазали по клавиатуре, введите - "p"')
-            decision = uiControl.readData(data[playerName]['name'])
 
         if decision == 'p':
             propertySell(rentData[data[playerName]['position']][cost])
-            if data[playerName]['status'] != ru_local.LEFTGAME:     
+            if data[playerName]['status'] != 'Не в игре':  
+                initBalance = data[playerName]['balance']
+                finalBalance = initBalance - rentData[data[playerName]['position']][cost]
                 uiControl.score.balance(playerName, data[playerName]['balance'], data[playerName]['balance'] - rentData[data[playerName]['position']][cost])
                 data[playerName]['balance'] -= rentData[data[playerName]['position']][cost]
 
@@ -818,15 +836,15 @@ def backend():
         nonlocal playerName
         nonlocal data
 
-        uiControl.message(f"{data[playerName]['name']} пропускает ход, так как он учится")
+        uiControl.message('dev', f"{data[playerName]['name']} пропускает ход, так как он учится")
         data[playerName]['countNSU'] -= 1
 
     startgame()
     while len(playerNames) > 1:
         for playerName in playerNames:
+
+            uiControl.message('separator', None)
             if data[playerName]['countNSU'] <= 0:
-                uiControl.score.status(playerName, data[playerName]['status'] , 'В игре')
-                data[playerName]['status'] = 'В игре'
 
                 moveMechanism()
                 
@@ -857,7 +875,7 @@ def backend():
 
                     if used_flag:
                         if mine_flag:
-                            uiControl.message(f'{data[playerName]["name"]}, этот объект принадлежит вам!')
+                            uiControl.message('dev', 'dev', f'{data[playerName]["name"]}, этот объект принадлежит вам!')
                             continue
                         else:
                             propertyPurch()
@@ -865,7 +883,7 @@ def backend():
             else:
                 strokeLoss()
 
-    uiControl.message(f'{playerNames[0]}, поздравляем, ты победил, возьми с полки пирожок и возвращайся за новым! Андрей Геннадьевич, проверьте досрок, пожалуйста...')
+    uiControl.message('dev', 'dev', f'{playerNames[0]}, поздравляем, ты победил, возьми с полки пирожок и возвращайся за новым! Андрей Геннадьевич, проверьте досрок, пожалуйста...')
     uiControl.endImg()
 
 
