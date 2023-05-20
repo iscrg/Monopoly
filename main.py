@@ -334,7 +334,7 @@ def main():
 
     # Reading data from files
     for pName in pNames:
-        with open(f'pos/{pName}.txt') as file:
+        with open(f'data/pos/{pName}.txt') as file:
             for line in file.readlines():
                 line = line.rstrip('\n').split(' ')
                 pointPos[pName].append(line)
