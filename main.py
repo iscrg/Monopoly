@@ -818,7 +818,7 @@ def main():
 
         # Confirming the action.
         while decision != 'p':
-            uiCtrl.msg('dev', 'Вы промазали по клавиатуре, введите - "p"')
+            uiCtrl.msg('dev', ru_local.FAILURE)
             decision = uiCtrl.readData(data[pName]['name'])
 
         # Transferring money from one balance to another.
