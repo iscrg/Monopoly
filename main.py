@@ -76,9 +76,6 @@ class ui(QMainWindow):
 
     def kapyTextEdit(self, initValue, finalValue):
         html = self.ui.kapyScore.toHtml()
-        print()
-        print(html)
-        print()
         html = html.replace(initValue, finalValue)
         self.ui.kapyScore.setHtml(html)
 
@@ -95,9 +92,6 @@ class ui(QMainWindow):
 
     def dogTextEdit(self, initValue, finalValue):
         html = self.ui.dogScore.toHtml()
-        print()
-        print(html)
-        print()
         html = html.replace(initValue, finalValue)
         self.ui.dogScore.setHtml(html)
 
@@ -178,7 +172,10 @@ class uiCtrl():
         elif player == 'parrot':
             ui.parrotPosEdit(ex, x, y)
 
+    # Class to manage score table.
     class score():
+
+        # Class to manage properties of any player.
         class prop():
             def add(player, value):
                 initValue = ru_local.INITPROPADD
@@ -199,9 +196,6 @@ class uiCtrl():
             def remove(player, value):
                 initValue = ru_local.INITPROPREMOVE(value)
                 finalValue = ''
-                print('******************************************************************************************')
-                print('---------' + initValue + '---------')
-                print('******************************************************************************************')
                 if player == 'kapy':
                     ui.kapyTextEditEvnt(ex, initValue, finalValue)
 
@@ -214,6 +208,7 @@ class uiCtrl():
                 elif player == 'parrot':
                     ui.parrotTextEditEvnt(ex, initValue, finalValue)
 
+        # Function to edit balance of any player in score table.
         def bs(player, initValue, finalValue):
             initValue_ = f'>{initValue}<'
             finalValue_ = f'>{finalValue}<'
@@ -230,6 +225,7 @@ class uiCtrl():
             elif player == 'parrot':
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
+        # Function to edit status of any player in score table.
         def status(player, initValue, finalValue):
             initValue_ = f'>{initValue}<'
             finalValue_ = f'>{finalValue}<'
@@ -246,9 +242,11 @@ class uiCtrl():
             elif player == 'parrot':
                 ui.parrotTextEditEvnt(ex, initValue_, finalValue_)
 
+    # Function to edit dice value in the window.
     def diceVal(value):
         ui.dice(ex, value)
 
+    # Function to print messages and separators in console.
     def msg(type_, txt):
         if type_ == 'dev':
             txt = ru_local.DEVELOPERSMSG(txt)
@@ -256,6 +254,7 @@ class uiCtrl():
             txt = '<hr>'
         ui.printMessageEvnt(ex, txt)
 
+    # Function to hide players from gaming field and from the score table.
     def hide(player, value):
         if player == 'kapy':
             ui.kapyEnable(ex, value)
@@ -269,11 +268,13 @@ class uiCtrl():
         elif player == 'parrot':
             ui.parrotEnable(ex, value)
 
+    # Function to hide endless message.
     def endImg():
         ui.endImgHide(ex)
 
 
 def main():
+    # Setting variables
     pNames = ['kapy', 'dog', 'gazmanov', 'parrot']
 
     data = {
@@ -330,6 +331,7 @@ def main():
         'parrot': []
     }
 
+    # Reading data from files
     for pName in pNames:
         with open(f'pos/{pName}.txt') as file:
             for line in file.readlines():
@@ -348,11 +350,13 @@ def main():
             p = line.rstrip('\n').split(' ')
             rentData.append([int(p[0]), int(p[1])])
 
+    # Function to find out the numbers of players.
     def startgame():
         nonlocal playersQuantity
         nonlocal pNames
         nonlocal data
 
+        # Cycle to read quantity of players
         while True:
             uiCtrl.msg('dev', ru_local.PLAYER_NUM)
             playersQuantity = uiCtrl.readData(ru_local.PLAYER)
@@ -366,6 +370,7 @@ def main():
 
             pNames = pNames[:playersQuantity]
 
+            # Unhiding players and score tables
             for pName in pNames:
                 uiCtrl.hide(pName, False)
                 uiCtrl.score.bs(pName, 0, 1000)
@@ -374,6 +379,7 @@ def main():
                 uiCtrl.score.status(pName, ru_local.LEFTGAME, ru_local.INGAME)
             break
 
+    # Function to sell properties if the balance is not in setted limit.
     def propSell(limit):
         nonlocal pNames
         nonlocal data
@@ -381,6 +387,8 @@ def main():
         nonlocal costData
 
         while data[pName]['bs'] < limit:
+
+            # Cheking for player bankrupting
             if len(data[pName]['prop']) == 0:
                 uiCtrl.msg('dev', ru_local.BANKRUPT(pName))
                 pNames.remove(pName)
@@ -390,10 +398,13 @@ def main():
                 uiCtrl.hide(pName, True)
 
                 break
+
             else:
+                # Reading properties to sell.
                 uiCtrl.msg('dev', ru_local.PROPSELL(data[pName]['name']))
                 prop = uiCtrl.readData(data[pName]['name'])
 
+                # Checking property existence
                 while prop not in ru_local.points:
                     uiCtrl.msg('dev',
                                ru_local.CORRECTPROP(data[pName]['name']))
@@ -401,26 +412,32 @@ def main():
 
                 propPos = ru_local.points.index(prop)
 
+                # Checking property availability
                 while propPos not in data[pName]['prop']:
                     uiCtrl.msg('dev',
                                ru_local.CORRECTPROP(data[pName]['name']))
                     prop = uiCtrl.readData(data[pName]['name'])
                     propPos = ru_local.points.index(prop)
 
+                # Removing property from 'data', score table
                 data[pName]['prop'].remove(propPos)
-                uiCtrl.score.bs(pName,
-                                data[pName]['bs'],
-                                data[pName]['bs'] + costData[propPos])
-
-                data[pName]['bs'] += costData[propPos]
-                uiCtrl.msg('dev', ru_local.SUCCESSSELL(pName,
-                                                       prop,
-                                                       costData[propPos]))
-
                 uiCtrl.score.prop.remove(pName,
                                          (ru_local.points[propPos] +
                                           ru_local.rentScore[propPos]))
 
+                # Changing balance
+                uiCtrl.score.bs(data[pName]['name'],
+                                data[pName]['bs'],
+                                data[pName]['bs'] + costData[propPos])
+
+                data[pName]['bs'] += costData[propPos]
+
+                # Success message
+                uiCtrl.msg('dev', ru_local.SUCCESSSELL(pName,
+                                                       prop,
+                                                       costData[propPos]))
+
+    # Handling events when the "Chance" points is attacked.
     def eventHandler():
         nonlocal data
         nonlocal pName
@@ -655,11 +672,13 @@ def main():
                                 data[pName]['bs'] - 70)
                 data[pName]['bs'] = data[pName]['bs'] - 70
 
+    # Function of purchase property
     def propPurch():
         nonlocal data
         nonlocal pName
         nonlocal costData
 
+        # Reading player decision
         uiCtrl.msg('dev', ru_local.PROPPURCH)
         decision = uiCtrl.readData(data[pName]['name'])
 
@@ -667,7 +686,10 @@ def main():
             uiCtrl.msg('dev', ru_local.PROPPURCH)
             decision = uiCtrl.readData(data[pName]['name'])
 
+        # Positive decision
         if decision == 'b':
+
+            # If the balance is sufficient
             if data[pName]['bs'] >= costData[data[pName]['pos']]:
                 data[pName]['prop'].append(data[pName]['pos'])
 
@@ -682,21 +704,28 @@ def main():
                                       ru_local.rentScore[data[pName]['pos']])
 
                 uiCtrl.msg('dev', ru_local.CONGRATULATION)
+
+            # Refusal
             else:
                 uiCtrl.msg('dev', ru_local.NOMONEY)
+
+        # Skip
         elif decision == 'n':
             pass
 
+    # Function of player admissing to NSU
     def nsuAdmition():
         nonlocal data
         nonlocal pName
         nonlocal pointPos
 
+        # Mooving to NSU point
         uiCtrl.move(pName,
                     pointPos[pName][6][0],
                     pointPos[pName][6][1])
         data[pName]['pos'] = 6
 
+        # Cheking for sufficient, changing balance
         propSell(195)
         if data[pName]['status'] != ru_local.LEFTGAME:
             uiCtrl.score.bs(pName,
@@ -704,10 +733,14 @@ def main():
                             data[pName]['bs'] - 195)
             data[pName]['bs'] = data[pName]['bs'] - 195
 
+            # Change status.
             uiCtrl.score.status(pName,  ru_local.INGAME,  ru_local.INNSU)
             data[pName]['status'] = ru_local.INNSU
+
+            # Starting counting two semesters of study.
             data[pName]['countNSU'] = 2
 
+    # Function of mooving.
     def moveMechanism():
         nonlocal data
         nonlocal pName
@@ -717,17 +750,21 @@ def main():
 
         decision = None
 
+        # Reading decision.
         while decision != 'k':
             uiCtrl.msg('dev', ru_local.DICEDROP(data[pName]["name"]))
             decision = uiCtrl.readData(data[pName]['name'])
 
         if decision == 'k':
+            # Roll of the dice.
             dice_number = random.randint(1, 6)
             uiCtrl.diceVal(dice_number)
             uiCtrl.msg('dev', ru_local.diceMsg[dice_number-1])
 
             playerPos = data[pName]['pos']
 
+            # Mooving action figure.
+            # If a player passes the starting field, he gets currency.
             if playerPos + dice_number > 23:
                 playerPos = dice_number - (24-playerPos)
                 countMoves += 1
@@ -735,6 +772,7 @@ def main():
                 uiCtrl.move(pName,
                             pointPos[pName][playerPos][0],
                             pointPos[pName][playerPos][1])
+
                 if countMoves > 0:
                     uiCtrl.score.bs(pName,
                                     data[pName]['bs'],
@@ -753,6 +791,7 @@ def main():
             data[pName]['pos'] = playerPos
             uiCtrl.msg('dev', ru_local.posMsg[data[pName]['pos']])
 
+    # Function of rent payment.
     def propPayment():
         nonlocal streetsCombin
         nonlocal pName_
@@ -760,28 +799,27 @@ def main():
         nonlocal rentData
         nonlocal pName
 
-        combin_flag = False
+        comb = 0
 
+        # Checking for street combinations.
         for streetCombin in streetsCombin:
             if data[pName]['pos'] in streetCombin:
                 if set(streetCombin).issubset(set(data[pName_]['prop'])):
-                    combin_flag = True
+                    comb = 1
                 break
 
-        if combin_flag:
-            comb = 1
-        else:
-            comb = 0
-
+        # Reading decision.
         uiCtrl.msg('dev',
                    ru_local.PAYMENT(data[pName_]["name"],
                                     rentData[data[pName]["pos"]][comb]))
         decision = uiCtrl.readData(data[pName]['name'])
 
+        # Confirming the action.
         while decision != 'p':
             uiCtrl.msg('dev', 'Вы промазали по клавиатуре, введите - "p"')
             decision = uiCtrl.readData(data[pName]['name'])
 
+        # Transferring money from one balance to another.
         if decision == 'p':
             propSell(rentData[data[pName]['pos']][comb])
             if data[pName]['status'] != ru_local.LEFTGAME:
@@ -797,6 +835,7 @@ def main():
                                  rentData[data[pName]['pos']][comb]))
                 data[pName_]['bs'] += rentData[data[pName]['pos']][comb]
 
+    # If player is in NSU - loss stroke.
     def strokeLoss():
         nonlocal pName
         nonlocal data
@@ -804,18 +843,21 @@ def main():
         uiCtrl.msg('dev', ru_local.GRADUATUING(data[pName]['name']))
         data[pName]['countNSU'] -= 1
 
+    # Main cycle
     startgame()
     while len(pNames) > 1:
         for pName in pNames:
 
             uiCtrl.msg('separator', None)
-            if data[pName]['countNSU'] <= 0:
 
+            # Cheking for studing
+            if data[pName]['countNSU'] <= 0:
                 uiCtrl.score.status(pName,
                                     data[pName]['status'],
                                     ru_local.INGAME)
                 data[pName]['status'] = ru_local.INGAME
 
+                # Mooving
                 moveMechanism()
                 if data[pName]['pos'] in [9, 20]:
                     eventHandler()
@@ -830,6 +872,7 @@ def main():
                     used_flag = True
                     mine_flag = False
 
+                    # Checking property eligibility
                     for pName_ in pNames:
                         if (pName_ == pName and
 
@@ -855,6 +898,7 @@ def main():
             else:
                 strokeLoss()
 
+    # Finally...
     uiCtrl.endImg()
     uiCtrl.msg('dev', ru_local.FINALLY(pNames[0]))
 
@@ -862,9 +906,11 @@ def main():
 def start():
     global ex
     global dataReadyEvent
+
     app = QApplication(sys.argv)
     ex = ui()
 
+    # Separation UI and backend by threads.
     dataReadyEvent = threading.Event()
     trd = threading.Thread(target=main)
     trd.start()

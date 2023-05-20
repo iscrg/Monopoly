@@ -149,7 +149,7 @@ def FINALPROPADD(value):
 
 
 def INITPROPREMOVE(value):
-    txt = f'<span style="font-size:10pt;">{value}</span>'
+    txt = f'<br /><span style=" font-size:10pt;">{value}</span>'
     return txt
 
 
