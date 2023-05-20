@@ -399,7 +399,7 @@ def main():
 
             # Cheking for player bankrupting
             if len(data[pName]['prop']) == 0:
-                uiCtrl.msg('dev', ru_local.BANKRUPT(pName))
+                uiCtrl.msg('dev', ru_local.BANKRUPT(data[pName]['name']))
                 pNames.remove(pName)
 
                 pStatus = data[pName]['status']
@@ -910,7 +910,7 @@ def main():
 
     # Finally...
     uiCtrl.endImg()
-    uiCtrl.msg('dev', ru_local.FINALLY(pNames[0]))
+    uiCtrl.msg('dev', ru_local.FINALLY(data[pNames[0]]['name']))
 
 
 def start():
