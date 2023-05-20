@@ -435,14 +435,14 @@ def main():
                                           ru_local.rentScore[propPos]))
 
                 # Changing balance
-                uiCtrl.score.bs(data[pName]['name'],
+                uiCtrl.score.bs(pName,
                                 data[pName]['bs'],
                                 data[pName]['bs'] + costData[propPos])
 
                 data[pName]['bs'] += costData[propPos]
 
                 # Success message
-                uiCtrl.msg('dev', ru_local.SUCCESSSELL(pName,
+                uiCtrl.msg('dev', ru_local.SUCCESSSELL(data[pName]['name'],
                                                        prop,
                                                        costData[propPos]))
 
