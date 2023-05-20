@@ -43,17 +43,12 @@ class ui(QMainWindow):
     def printMessageEvnt(self, value):
         self.sgnl.consoleMessageSgnl.emit(value)
 
-<<<<<<< Updated upstream
-    def printMessage(self, value):
-        self.ui.console.append(f'<span style="font-weight:600;font-size:12pt;"> [{ru_local.DEVELOPERS}]</span> <span style="font-size:12pt;">{value}</span>')
-=======
     def printMessage(self, msg):
         #self.ui.console.append(msg)
         html = self.ui.console.toHtml()
         html = html.replace('</p></body></html>', f'<span style=" font-size:12pt;">{msg}<hr /></span>')
         self.ui.console.setHtml(html)
         
->>>>>>> Stashed changes
 
     # Reading data from chat.
     def buttonEnadle(self):
@@ -466,14 +461,8 @@ def backend():
                 uiControl.hide(playerName, False)
                 uiControl.score.balance(playerName, 0, 1000)
                 data[playerName]['balance'] = 1000
-<<<<<<< Updated upstream
-                data[playerName]['status'] = ru_local.INGAME
-                uiControl.score.status(playerName, ru_local.LEFTGAME, ru_local.INGAME)
-                
-=======
                 data[playerName]['status'] = 'В игре'
                 uiControl.score.status(playerName, 'Не в игре', 'В игре')
->>>>>>> Stashed changes
             break
     
     def propertySell(limit):
