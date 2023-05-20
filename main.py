@@ -1,3 +1,10 @@
+'''
+Powered by:
+Popov Ivan (80%)
+Fedyakin Dmitry (70%)
+Fisher Daniil (75%)
+'''
+
 import threading
 import sys
 import random
