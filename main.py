@@ -5,6 +5,7 @@ import ru_local
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import uic, QtGui, QtCore
 
+
 class ui(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -42,7 +43,7 @@ class ui(QMainWindow):
         self.sgnl.consoleMessageSgnl.emit(value)
 
     def printMessage(self, msg):
-        self.ui.console.append(f'<span style=" font-size:12pt;">{msg}</span></body></html>')
+        self.ui.console.append(ru_local.MSGCONSOLE(msg))
 
     # Reading data from chat.
     def buttonEnadle(self):
@@ -56,7 +57,8 @@ class ui(QMainWindow):
 
         player = CurrentPlayer
 
-        self.ui.console.append(f'<span style="font-weight:600;font-size:12pt;">[{player}]</span> <span style="font-size:12pt;">{self.ui.inputLine.text()}</span>')
+        self.ui.console.append(ru_local.READCONSOLE(player,
+                                                    self.ui.inputLine.text()))
         chatData = self.ui.inputLine.text()
         self.ui.inputLine.setText('')
         dataReadyEvent.set()
@@ -74,6 +76,9 @@ class ui(QMainWindow):
 
     def kapyTextEdit(self, initValue, finalValue):
         html = self.ui.kapyScore.toHtml()
+        print()
+        print(html)
+        print()
         html = html.replace(initValue, finalValue)
         self.ui.kapyScore.setHtml(html)
 
@@ -90,6 +95,9 @@ class ui(QMainWindow):
 
     def dogTextEdit(self, initValue, finalValue):
         html = self.ui.dogScore.toHtml()
+        print()
+        print(html)
+        print()
         html = html.replace(initValue, finalValue)
         self.ui.dogScore.setHtml(html)
 
@@ -132,6 +140,7 @@ class ui(QMainWindow):
     def endImgHide(self):
         self.ui.endImg.setHidden(False)
 
+
 # Adding signals for edit score tables.
 class Signals(QtCore.QObject):
     kapyTextEditSgnl = QtCore.pyqtSignal(str, str)
@@ -139,6 +148,7 @@ class Signals(QtCore.QObject):
     gazmanovTextEditSgnl = QtCore.pyqtSignal(str, str)
     parrotTextEditSgnl = QtCore.pyqtSignal(str, str)
     consoleMessageSgnl = QtCore.pyqtSignal(str)
+
 
 # Class for controlling UI.
 class uiCtrl():
@@ -169,10 +179,10 @@ class uiCtrl():
             ui.parrotPosEdit(ex, x, y)
 
     class score():
-        class property():
+        class prop():
             def add(player, value):
-                initValue = '</p></body></html>'
-                finalValue = f'<br /><span style="font-size:10pt;">{value}</span></p></body></html>'
+                initValue = ru_local.INITPROPADD
+                finalValue = ru_local.FINALPROPADD(value)
 
                 if player == 'kapy':
                     ui.kapyTextEditEvnt(ex, initValue, finalValue)
@@ -187,9 +197,11 @@ class uiCtrl():
                     ui.parrotTextEditEvnt(ex, initValue, finalValue)
 
             def remove(player, value):
-                initValue = f'<br /><span style="font-size:10pt;">{value}</span></p></body></html>'
+                initValue = ru_local.INITPROPREMOVE(value)
                 finalValue = ''
-
+                print('******************************************************************************************')
+                print('---------' + initValue + '---------')
+                print('******************************************************************************************')
                 if player == 'kapy':
                     ui.kapyTextEditEvnt(ex, initValue, finalValue)
 
@@ -237,12 +249,12 @@ class uiCtrl():
     def diceVal(value):
         ui.dice(ex, value)
 
-    def message(type_, msg):
+    def msg(type_, txt):
         if type_ == 'dev':
-            msg = f'<span style="font-weight:600;font-size:12pt;">[{ru_local.DEVELOPERS}]</span> <span style="font-size:12pt;">{msg}</span>'
+            txt = ru_local.DEVELOPERSMSG(txt)
         elif type_ == 'separator':
-            msg = '<hr>'
-        ui.printMessageEvnt(ex, msg)
+            txt = '<hr>'
+        ui.printMessageEvnt(ex, txt)
 
     def hide(player, value):
         if player == 'kapy':
@@ -260,7 +272,8 @@ class uiCtrl():
     def endImg():
         ui.endImgHide(ex)
 
-def backend():
+
+def main():
     pNames = ['kapy', 'dog', 'gazmanov', 'parrot']
 
     data = {
@@ -268,32 +281,32 @@ def backend():
             'name': f'{ru_local.KAPY}',
             'balance': 0,
             'status': f'{ru_local.LEFTGAME}',
-            'position': 0,
-            'property': [],
+            'pos': 0,
+            'prop': [],
             'countNSU': 0
         },
         'dog': {
             'name': f'{ru_local.DOG}',
             'balance': 0,
             'status': f'{ru_local.LEFTGAME}',
-            'position': 0,
-            'property': [],
+            'pos': 0,
+            'prop': [],
             'countNSU': 0
         },
         'gazmanov': {
             'name': f'{ru_local.GAZMANOV}',
             'balance': 0,
             'status': f'{ru_local.LEFTGAME}',
-            'position': 0,
-            'property': [],
+            'pos': 0,
+            'prop': [],
             'countNSU': 0
         },
         'parrot': {
             'name': f'{ru_local.PARROT}',
             'balance': 0,
             'status': f'{ru_local.LEFTGAME}',
-            'position': 0,
-            'property': [],
+            'pos': 0,
+            'prop': [],
             'countNSU': 0
         }
     }
@@ -323,21 +336,6 @@ def backend():
                 line = line.rstrip('\n').split(' ')
                 pointPos[pName].append(line)
 
-    diceMsg = []
-    with open('data/dicemsg.txt', encoding='utf-8') as file:
-        for line in file.readlines():
-            diceMsg.append(line.rstrip('\n'))
-
-    evnData = []
-    with open('data/events.txt', encoding="utf-8") as file:
-        for line in file.readlines():
-            evnData.append(line.rstrip('\n'))
-
-    posmsgPos = []
-    with open('pos/posmsg.txt', encoding="utf-8") as file:
-        for line in file.readlines():
-            posmsgPos.append(line.rstrip('\n'))
-
     costData = []
     with open('data/cost.txt') as file:
         for line in file.readlines():
@@ -350,18 +348,13 @@ def backend():
             p = line.rstrip('\n').split(' ')
             rentData.append([int(p[0]), int(p[1])])
 
-    pointsData = []
-    with open('data/points.txt', encoding="utf-8") as file:
-        for line in file.readlines():
-            pointsData.append(line.rstrip('\n'))
-
     def startgame():
         nonlocal playersQuantity
         nonlocal pNames
         nonlocal data
 
         while True:
-            uiCtrl.message('dev', ru_local.PLAYER_NUM)
+            uiCtrl.msg('dev', ru_local.PLAYER_NUM)
             playersQuantity = uiCtrl.readData(ru_local.PLAYER)
 
             try:
@@ -381,16 +374,15 @@ def backend():
                 uiCtrl.score.status(pName, ru_local.LEFTGAME, ru_local.INGAME)
             break
 
-    def propertySell(limit):
+    def propSell(limit):
         nonlocal pNames
         nonlocal data
         nonlocal pName
         nonlocal costData
-        nonlocal pointsData
 
         while data[pName]['bs'] < limit:
-            if len(data[pName]['property']) == 0:
-                uiCtrl.message('dev', f'{data[pName]["name"]}, на вашем счёте недостаточно средств. У вас отсутствует недвижимость для продажи - вы банкрот! Вы покидаете Академгородок!')
+            if len(data[pName]['prop']) == 0:
+                uiCtrl.msg('dev', ru_local.BANKRUPT(pName))
                 pNames.remove(pName)
 
                 pStatus = data[pName]['status']
@@ -399,29 +391,35 @@ def backend():
 
                 break
             else:
-                uiCtrl.message('dev', f'{data[pName]["name"]}, на вашем счёте недостаточно средств. У вас есть недвижимость для продажи. Введите название объекта, который хотите продать!')
+                uiCtrl.msg('dev', ru_local.PROPSELL(data[pName]['name']))
                 prop = uiCtrl.readData(data[pName]['name'])
 
-                while prop not in pointsData:
-                    uiCtrl.message('dev', f'{data[pName]["name"]}, введите корректное название объекта.')
+                while prop not in ru_local.points:
+                    uiCtrl.msg('dev',
+                               ru_local.CORRECTPROP(data[pName]['name']))
                     prop = uiCtrl.readData(data[pName]['name'])
 
-                propPos = pointsData.index(prop)
+                propPos = ru_local.points.index(prop)
 
-                while propPos not in data[pName]['property']:
-                    uiCtrl.message('dev', f'{data[pName]["name"]}, введите корректное название объекта.')
+                while propPos not in data[pName]['prop']:
+                    uiCtrl.msg('dev',
+                               ru_local.CORRECTPROP(data[pName]['name']))
                     prop = uiCtrl.readData(data[pName]['name'])
-                    propPos = pointsData.index(prop)
+                    propPos = ru_local.points.index(prop)
 
-                data[pName]['property'].remove(propPos)
+                data[pName]['prop'].remove(propPos)
                 uiCtrl.score.bs(pName,
                                 data[pName]['bs'],
                                 data[pName]['bs'] + costData[propPos])
 
                 data[pName]['bs'] += costData[propPos]
-                uiCtrl.message('dev', f'{data[pName]["name"]}, вы успешно продали {prop} по цене {costData[propPos]}₽.')
-                uiCtrl.score.property.remove(pName,
-                                             pointsData[propPos])
+                uiCtrl.msg('dev', ru_local.SUCCESSSELL(pName,
+                                                       prop,
+                                                       costData[propPos]))
+
+                uiCtrl.score.prop.remove(pName,
+                                         (ru_local.points[propPos] +
+                                          ru_local.rentScore[propPos]))
 
     def eventHandler():
         nonlocal data
@@ -434,255 +432,258 @@ def backend():
         decision = uiCtrl.readData(data[pName]['name'])
 
         while decision != 'y':
-            uiCtrl.message('dev', ru_local.Y)
+            uiCtrl.msg('dev', ru_local.Y)
             decision = uiCtrl.readData(data[pName]['name'])
 
-            if event == 0:
-                uiCtrl.message('dev', evnData[event])
+        if event == 0:
+            uiCtrl.msg('dev', ru_local.evnData[event])
 
-                xPos = pointPos[pName][6][0]
-                yPos = pointPos[pName][6][1]
+            uiCtrl.move(pName,
+                        pointPos[pName][6][0],
+                        pointPos[pName][6][1])
+            data[pName]['pos'] = 6
 
-                uiCtrl.move(pName, xPos, yPos)
-                data[pName]['position'] = 6
+            propSell(195)
+            if data[pName]['status'] != ru_local.LEFTGAME:
+                uiCtrl.score.bs(pName,
+                                data[pName]['bs'],
+                                data[pName]['bs'] - 195)
+                data[pName]['bs'] = data[pName]['bs'] - 195
 
-                propertySell(195)
-                if data[pName]['status'] != ru_local.LEFTGAME:
-                    uiCtrl.score.bs(pName,
-                                    data[pName]['bs'],
-                                    data[pName]['bs'] - 195)
-                    data[pName]['bs'] = data[pName]['bs'] - 195
+                uiCtrl.score.status(pName, ru_local.INGAME, ru_local.INNSU)
+                data[pName]['countNSU'] = 2
 
-                    uiCtrl.score.status(pName, ru_local.INGAME, ru_local.INNSU)
-                    data[pName]['countNSU'] = 2
+        elif event == 1:
+            uiCtrl.msg('dev', ru_local.evnData[event])
 
-            elif event == 1:
-                uiCtrl.message('dev', evnData[event])
+            uiCtrl.move(pName,
+                        pointPos[pName][23][0],
+                        pointPos[pName][23][1])
+            data[pName]['pos'] = 23
 
-                xPos = pointPos[pName][23][0]
-                yPos = pointPos[pName][23][1]
+            used_flag = True
+            mine_flag = False
 
-                uiCtrl.move(pName, xPos, yPos)
-                data[pName]['position'] = 23
-
-                used_flag = True
-                mine_flag = False
-
-                for pName_ in pNames:
-                    if data[pName]['position'] in data[pName_]['property']:
-                        if pName_ == pName:
-                            mine_flag = True
-                            continue
-                        else:
-                            used_flag = False
-                            propertyPayment()
-                            break
-
-                if used_flag:
-                    if mine_flag:
-                        uiCtrl.message('dev', f'{data[pName]["name"]}, этот объект принадлежит вам!')
+            for pName_ in pNames:
+                if data[pName]['pos'] in data[pName_]['prop']:
+                    if pName_ == pName:
+                        mine_flag = True
+                        continue
                     else:
-                        propertyPurch()
+                        used_flag = False
+                        propPayment()
+                        break
 
-            elif event == 2:
-                uiCtrl.message('dev', evnData[event])
+            if used_flag:
+                if mine_flag:
+                    uiCtrl.msg('dev',
+                               ru_local.YOURSPROP(data[pName]["name"]))
+                else:
+                    propPurch()
 
+        elif event == 2:
+            uiCtrl.msg('dev', ru_local.evnData[event])
+
+            uiCtrl.score.bs(pName,
+                            data[pName]['bs'],
+                            data[pName]['bs'] + 100)
+            data[pName]['bs'] = data[pName]['bs'] + 100
+
+            uiCtrl.move(pName,
+                        pointPos[pName][2][0],
+                        pointPos[pName][2][1])
+            data[pName]['pos'] = 2
+
+            used_flag = True
+            mine_flag = False
+
+            for pName_ in pNames:
+                if data[pName]['pos'] in data[pName_]['prop']:
+                    if pName_ == pName:
+                        mine_flag = True
+                        continue
+                    else:
+                        used_flag = False
+                        propPayment()
+                        break
+
+            if used_flag:
+                if mine_flag:
+                    uiCtrl.msg('dev',
+                               ru_local.YOURSPROP(data[pName]["name"]))
+                else:
+                    propPurch()
+
+        elif event == 3:
+            uiCtrl.msg('dev', ru_local.evnData[event])
+
+            uiCtrl.score.bs(pName,
+                            data[pName]['bs'],
+                            data[pName]['bs'] + 50)
+            data[pName]['bs'] = data[pName]['bs'] + 50
+
+        elif event == 4:
+            uiCtrl.msg('dev', ru_local.evnData[event])
+
+            if data[pName]['pos'] > 19:
                 uiCtrl.score.bs(pName,
                                 data[pName]['bs'],
                                 data[pName]['bs'] + 100)
                 data[pName]['bs'] = data[pName]['bs'] + 100
 
-                xPos = pointPos[pName][2][0]
-                yPos = pointPos[pName][2][1]
+            uiCtrl.move(pName,
+                        pointPos[pName][19][0],
+                        pointPos[pName][19][1])
+            data[pName]['pos'] = 19
 
-                uiCtrl.move(pName, xPos, yPos)
-                data[pName]['position'] = 2
+            used_flag = True
+            mine_flag = False
 
-                used_flag = True
-                mine_flag = False
-
-                for pName_ in pNames:
-                    if data[pName]['position'] in data[pName_]['property']:
-                        if pName_ == pName:
-                            mine_flag = True
-                            continue
-                        else:
-                            used_flag = False
-                            propertyPayment()
-                            break
-
-                if used_flag:
-                    if mine_flag:
-                        uiCtrl.message('dev', f'{data[pName]["name"]}, этот объект принадлежит вам!')
+            for pName_ in pNames:
+                if data[pName]['pos'] in data[pName_]['prop']:
+                    if pName_ == pName:
+                        mine_flag = True
+                        continue
                     else:
-                        propertyPurch()
+                        used_flag = False
+                        propPayment()
+                        break
 
-            elif event == 3:
-                uiCtrl.message('dev', evnData[event])
+            if used_flag:
+                if mine_flag:
+                    uiCtrl.msg('dev',
+                               ru_local.YOURSPROP(data[pName]["name"]))
+                else:
+                    propPurch()
 
-                uiCtrl.score.bs(pName,
-                                data[pName]['bs'],
-                                data[pName]['bs'] + 50)
-                data[pName]['bs'] = data[pName]['bs'] + 50
+        elif event == 5:
+            uiCtrl.msg('dev', ru_local.evnData[event])
 
-            elif event == 4:
-                uiCtrl.message('dev', evnData[event])
-
-                if data[pName]['position'] > 19:
-                    uiCtrl.score.bs(pName,
-                                    data[pName]['bs'],
-                                    data[pName]['bs'] + 100)
-                    data[pName]['bs'] = data[pName]['bs'] + 100
-
-                uiCtrl.move(pName,
-                            pointPos[pName][19][0],
-                            pointPos[pName][19][1])
-                data[pName]['position'] = 19
-
-                used_flag = True
-                mine_flag = False
-
-                for pName_ in pNames:
-                    if data[pName]['position'] in data[pName_]['property']:
-                        if pName_ == pName:
-                            mine_flag = True
-                            continue
-                        else:
-                            used_flag = False
-                            propertyPayment()
-                            break
-
-                if used_flag:
-                    if mine_flag:
-                        uiCtrl.message('dev', f'{data[pName]["name"]}, этот объект принадлежит вам!')
-                    else:
-                        propertyPurch()
-
-            elif event == 5:
-                uiCtrl.message('dev', evnData[event])
-
-                if data[pName]['position'] > 15:
-                    uiCtrl.score.bs(pName, data[pName]['bs'], data[pName]['bs'] + 100)
-                    data[pName]['bs'] = data[pName]['bs'] + 100
-
-                uiCtrl.move(pName,
-                            pointPos[pName][15][0],
-                            pointPos[pName][15][1])
-                data[pName]['position'] = 15
-
-                used_flag = True
-                mine_flag = False
-
-                for pName_ in pNames:
-                    if data[pName]['position'] in data[pName_]['property']:
-                        if pName_ == pName:
-                            mine_flag = True
-                            continue
-                        else:
-                            used_flag = False
-                            propertyPayment()
-                            break
-
-                if used_flag:
-                    if mine_flag:
-                        uiCtrl.message('dev', f'{data[pName]["name"]}, этот объект принадлежит вам!')
-                    else:
-                        propertyPurch()
-
-            elif event == 6:
-                uiCtrl.message('dev', evnData[event])
-
+            if data[pName]['pos'] > 15:
                 uiCtrl.score.bs(pName,
                                 data[pName]['bs'],
                                 data[pName]['bs'] + 100)
                 data[pName]['bs'] = data[pName]['bs'] + 100
 
-                uiCtrl.move(pName,
-                            pointPos[pName][0][0],
-                            pointPos[pName][0][1])
-                data[pName]['position'] = 0
+            uiCtrl.move(pName,
+                        pointPos[pName][15][0],
+                        pointPos[pName][15][1])
+            data[pName]['pos'] = 15
 
-            elif event == 7:
-                uiCtrl.message('dev', evnData[event])
+            used_flag = True
+            mine_flag = False
 
-                propertySell(70)
-                if data[pName]['status'] !=  ru_local.LEFTGAME:
-                    uiCtrl.score.bs(pName,
-                                    data[pName]['bs'],
-                                    data[pName]['bs'] - 70)
-                    data[pName]['bs'] = data[pName]['bs'] - 70
+            for pName_ in pNames:
+                if data[pName]['pos'] in data[pName_]['prop']:
+                    if pName_ == pName:
+                        mine_flag = True
+                        continue
+                    else:
+                        used_flag = False
+                        propPayment()
+                        break
 
-            elif event == 8:
-                uiCtrl.message('dev', evnData[event])
+            if used_flag:
+                if mine_flag:
+                    uiCtrl.msg('dev',
+                               ru_local.YOURSPROP(data[pName]["name"]))
+                else:
+                    propPurch()
 
+        elif event == 6:
+            uiCtrl.msg('dev', ru_local.evnData[event])
+
+            uiCtrl.score.bs(pName,
+                            data[pName]['bs'],
+                            data[pName]['bs'] + 100)
+            data[pName]['bs'] = data[pName]['bs'] + 100
+
+            uiCtrl.move(pName,
+                        pointPos[pName][0][0],
+                        pointPos[pName][0][1])
+            data[pName]['pos'] = 0
+
+        elif event == 7:
+            uiCtrl.msg('dev', ru_local.evnData[event])
+
+            propSell(70)
+            if data[pName]['status'] != ru_local.LEFTGAME:
                 uiCtrl.score.bs(pName,
                                 data[pName]['bs'],
-                                data[pName]['bs'] + 50)
-                data[pName]['bs'] = data[pName]['bs'] + 50
+                                data[pName]['bs'] - 70)
+                data[pName]['bs'] = data[pName]['bs'] - 70
 
-                xPos = pointPos[pName][4][0]
-                yPos = pointPos[pName][4][1]
+        elif event == 8:
+            uiCtrl.msg('dev', ru_local.evnData[event])
 
-                uiCtrl.move(pName, xPos, yPos)
-                data[pName]['position'] = 4
+            uiCtrl.score.bs(pName,
+                            data[pName]['bs'],
+                            data[pName]['bs'] + 50)
+            data[pName]['bs'] = data[pName]['bs'] + 50
 
-                used_flag = True
-                mine_flag = False
+            uiCtrl.move(pName,
+                        pointPos[pName][4][0],
+                        pointPos[pName][4][1])
+            data[pName]['pos'] = 4
 
-                for pName_ in pNames:
-                    if data[pName]['position'] in data[pName_]['property']:
-                        if pName_ == pName:
-                            mine_flag = True
-                            continue
-                        else:
-                            used_flag = False
-                            propertyPayment()
-                            break
+            used_flag = True
+            mine_flag = False
 
-                if used_flag:
-                    if mine_flag:
-                        uiCtrl.message('dev', f'{data[pName]["name"]}, этот объект принадлежит вам!')
+            for pName_ in pNames:
+                if data[pName]['pos'] in data[pName_]['prop']:
+                    if pName_ == pName:
+                        mine_flag = True
+                        continue
                     else:
-                        propertyPurch()
+                        used_flag = False
+                        propPayment()
+                        break
 
-            elif event == 9:
-                uiCtrl.message('dev', evnData[event])
-                propertySell(70)
-                if data[pName]['status'] !=  ru_local.LEFTGAME:
-                    uiCtrl.score.bs(pName,
-                                    data[pName]['bs'],
-                                    data[pName]['bs'] - 70)
-                    data[pName]['bs'] = data[pName]['bs'] - 70
+            if used_flag:
+                if mine_flag:
+                    uiCtrl.msg('dev',
+                               ru_local.YOURSPROP(data[pName]["name"]))
+                else:
+                    propPurch()
 
-    def propertyPurch():
+        elif event == 9:
+            uiCtrl.msg('dev', ru_local.evnData[event])
+            propSell(70)
+            if data[pName]['status'] != ru_local.LEFTGAME:
+                uiCtrl.score.bs(pName,
+                                data[pName]['bs'],
+                                data[pName]['bs'] - 70)
+                data[pName]['bs'] = data[pName]['bs'] - 70
+
+    def propPurch():
         nonlocal data
         nonlocal pName
         nonlocal costData
-        nonlocal pointsData
 
-        uiCtrl.message('dev', ru_local.PROPPURCH)
+        uiCtrl.msg('dev', ru_local.PROPPURCH)
         decision = uiCtrl.readData(data[pName]['name'])
 
         while decision != 'b' and decision != 'n':
-            uiCtrl.message('dev', ru_local.PROPPURCH)
-            decision = uiCtrl.readData(data[pName]['name']) 
+            uiCtrl.msg('dev', ru_local.PROPPURCH)
+            decision = uiCtrl.readData(data[pName]['name'])
 
         if decision == 'b':
-            if data[pName]['bs'] >= costData[data[pName]['position']]:
-                data[pName]['property'].append(data[pName]['position'])
+            if data[pName]['bs'] >= costData[data[pName]['pos']]:
+                data[pName]['prop'].append(data[pName]['pos'])
 
                 uiCtrl.score.bs(pName,
                                 data[pName]['bs'],
                                 (data[pName]['bs'] -
-                                 costData[data[pName]['position']]))
+                                 costData[data[pName]['pos']]))
 
-                data[pName]['bs'] -= costData[data[pName]['position']]
-                uiCtrl.score.property.add(pName,
-                                          pointsData[data[pName]['position']])
+                data[pName]['bs'] -= costData[data[pName]['pos']]
+                uiCtrl.score.prop.add(pName,
+                                      (ru_local.points[data[pName]['pos']]) +
+                                      ru_local.rentScore[data[pName]['pos']])
 
-                uiCtrl.message('dev', ru_local.CONGRATULATION)
+                uiCtrl.msg('dev', ru_local.CONGRATULATION)
             else:
-                uiCtrl.message('dev', ru_local.NOMONEY)
+                uiCtrl.msg('dev', ru_local.NOMONEY)
         elif decision == 'n':
             pass
 
@@ -691,72 +692,68 @@ def backend():
         nonlocal pName
         nonlocal pointPos
 
-        xPos = pointPos[pName][6][0]
-        yPos = pointPos[pName][6][1]
-        uiCtrl.move(pName, xPos, yPos)
-        data[pName]['position'] = 6
+        uiCtrl.move(pName,
+                    pointPos[pName][6][0],
+                    pointPos[pName][6][1])
+        data[pName]['pos'] = 6
 
-        propertySell(195)
-        if data[pName]['status'] !=  ru_local.LEFTGAME:
+        propSell(195)
+        if data[pName]['status'] != ru_local.LEFTGAME:
             uiCtrl.score.bs(pName,
                             data[pName]['bs'],
                             data[pName]['bs'] - 195)
             data[pName]['bs'] = data[pName]['bs'] - 195
 
             uiCtrl.score.status(pName,  ru_local.INGAME,  ru_local.INNSU)
-            data[pName]['status'] =  ru_local.INNSU
+            data[pName]['status'] = ru_local.INNSU
             data[pName]['countNSU'] = 2
 
     def moveMechanism():
         nonlocal data
         nonlocal pName
-        nonlocal posmsgPos
-        nonlocal diceMsg
         nonlocal pointPos
 
         countMoves = 0
 
-        uiCtrl.message('dev', f'{data[pName]["name"]}, чтобы кинуть кубик - введите "k"')
-        decision = uiCtrl.readData(data[pName]['name'])
+        decision = None
 
         while decision != 'k':
-            uiCtrl.message('dev', f'{data[pName]["name"]}, чтобы кинуть кубик - введите "k"')
+            uiCtrl.msg('dev', ru_local.DICEDROP(data[pName]["name"]))
             decision = uiCtrl.readData(data[pName]['name'])
 
         if decision == 'k':
             dice_number = random.randint(1, 6)
             uiCtrl.diceVal(dice_number)
-            uiCtrl.message('dev', diceMsg[dice_number-1])
+            uiCtrl.msg('dev', ru_local.diceMsg[dice_number-1])
 
-            playerPos = data[pName]['position']
+            playerPos = data[pName]['pos']
 
             if playerPos + dice_number > 23:
                 playerPos = dice_number - (24-playerPos)
                 countMoves += 1
-                xPos = pointPos[pName][playerPos][0]
-                yPos = pointPos[pName][playerPos][1]
 
-                uiCtrl.move(pName, xPos, yPos)
+                uiCtrl.move(pName,
+                            pointPos[pName][playerPos][0],
+                            pointPos[pName][playerPos][1])
                 if countMoves > 0:
                     uiCtrl.score.bs(pName,
                                     data[pName]['bs'],
                                     data[pName]['bs'] + 100)
                     data[pName]['bs'] += 100
-                    uiCtrl.message('dev', ru_local.CIRCLE)
+                    uiCtrl.msg('dev', ru_local.CIRCLE)
                     countMoves = 0
 
             else:
                 playerPos += dice_number
 
-                xPos = pointPos[pName][playerPos][0]
-                yPos = pointPos[pName][playerPos][1]
+                uiCtrl.move(pName,
+                            pointPos[pName][playerPos][0],
+                            pointPos[pName][playerPos][1])
 
-                uiCtrl.move(pName, xPos, yPos)
+            data[pName]['pos'] = playerPos
+            uiCtrl.msg('dev', ru_local.posMsg[data[pName]['pos']])
 
-            data[pName]['position'] = playerPos
-            uiCtrl.message('dev', posmsgPos[data[pName]['position']])
-
-    def propertyPayment():
+    def propPayment():
         nonlocal streetsCombin
         nonlocal pName_
         nonlocal data
@@ -766,63 +763,67 @@ def backend():
         combin_flag = False
 
         for streetCombin in streetsCombin:
-            if data[pName]['position'] in streetCombin:
-                if set(streetCombin).issubset(set(data[pName_]['property'])):
+            if data[pName]['pos'] in streetCombin:
+                if set(streetCombin).issubset(set(data[pName_]['prop'])):
                     combin_flag = True
                 break
 
         if combin_flag:
-            cost = 1
+            comb = 1
         else:
-            cost = 0
+            comb = 0
 
-        uiCtrl.message('dev', f'Этот объект пренадлежит игроку "{data[pName_]["name"]}". Заплатите ему {rentData[data[pName]["position"]][cost]}₽, для этого введите - "p"')
+        uiCtrl.msg('dev',
+                   ru_local.PAYMENT(data[pName_]["name"],
+                                    rentData[data[pName]["pos"]][comb]))
         decision = uiCtrl.readData(data[pName]['name'])
 
         while decision != 'p':
-            uiCtrl.message('dev', f'Вы промазали по клавиатуре, введите - "p"')
+            uiCtrl.msg('dev', 'Вы промазали по клавиатуре, введите - "p"')
             decision = uiCtrl.readData(data[pName]['name'])
 
         if decision == 'p':
-            propertySell(rentData[data[pName]['position']][cost])
-            if data[pName]['status'] !=  ru_local.LEFTGAME:
+            propSell(rentData[data[pName]['pos']][comb])
+            if data[pName]['status'] != ru_local.LEFTGAME:
                 uiCtrl.score.bs(pName,
                                 data[pName]['bs'],
                                 (data[pName]['bs'] -
-                                 rentData[data[pName]['position']][cost]))
-                data[pName]['bs'] -= rentData[data[pName]['position']][cost]
+                                 rentData[data[pName]['pos']][comb]))
+                data[pName]['bs'] -= rentData[data[pName]['pos']][comb]
 
                 uiCtrl.score.bs(pName_,
                                 data[pName_]['bs'],
                                 (data[pName_]['bs'] +
-                                 rentData[data[pName]['position']][cost]))
-                data[pName_]['bs'] += rentData[data[pName]['position']][cost]
+                                 rentData[data[pName]['pos']][comb]))
+                data[pName_]['bs'] += rentData[data[pName]['pos']][comb]
 
     def strokeLoss():
         nonlocal pName
         nonlocal data
 
-        uiCtrl.message('dev', f"{data[pName]['name']} пропускает ход, так как он учится")
+        uiCtrl.msg('dev', ru_local.GRADUATUING(data[pName]['name']))
         data[pName]['countNSU'] -= 1
 
     startgame()
     while len(pNames) > 1:
         for pName in pNames:
 
-            uiCtrl.message('separator', None)
+            uiCtrl.msg('separator', None)
             if data[pName]['countNSU'] <= 0:
-                
-                uiCtrl.score.status(pName, data[pName]['status'] , ru_local.INGAME)
+
+                uiCtrl.score.status(pName,
+                                    data[pName]['status'],
+                                    ru_local.INGAME)
                 data[pName]['status'] = ru_local.INGAME
 
                 moveMechanism()
-                if data[pName]['position'] in [9, 20]:
+                if data[pName]['pos'] in [9, 20]:
                     eventHandler()
 
-                elif data[pName]['position'] in [0, 6, 12]:
+                elif data[pName]['pos'] in [0, 6, 12]:
                     pass
 
-                elif data[pName]['position'] == 18:
+                elif data[pName]['pos'] == 18:
                     nsuAdmition()
 
                 else:
@@ -832,42 +833,44 @@ def backend():
                     for pName_ in pNames:
                         if (pName_ == pName and
 
-                            (data[pName]['position'] in
-                             data[pName_]['property'])):
+                            (data[pName]['pos'] in
+                             data[pName_]['prop'])):
 
                             mine_flag = True
                             continue
 
-                        if data[pName]['position'] in data[pName_]['property']:
+                        if data[pName]['pos'] in data[pName_]['prop']:
                             used_flag = False
-                            propertyPayment()
+                            propPayment()
                             break
 
                     if used_flag:
                         if mine_flag:
-                            uiCtrl.message('dev', f'{data[pName]["name"]}, этот объект принадлежит вам!')
+                            uiCtrl.msg('dev',
+                                       ru_local.YOURSPROP(data[pName]["name"]))
                             continue
                         else:
-                            propertyPurch()
+                            propPurch()
 
             else:
                 strokeLoss()
 
-    uiCtrl.message('dev', f'{pNames[0]}, поздравляем, ты победил, возьми с полки пирожок и возвращайся за новым! Андрей Геннадьевич, проверьте досрок, пожалуйста...')
     uiCtrl.endImg()
+    uiCtrl.msg('dev', ru_local.FINALLY(pNames[0]))
 
-def main():
+
+def start():
     global ex
     global dataReadyEvent
     app = QApplication(sys.argv)
     ex = ui()
 
     dataReadyEvent = threading.Event()
-
-    trd = threading.Thread(target=backend)
+    trd = threading.Thread(target=main)
     trd.start()
 
     app.exec_()
 
+
 if __name__ == '__main__':
-    main()
+    start()
