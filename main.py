@@ -399,7 +399,7 @@ def main():
 
             # Cheking for player bankrupting
             if len(data[pName]['prop']) == 0:
-                uiCtrl.msg('dev', ru_local.BANKRUPT(pName))
+                uiCtrl.msg('dev', ru_local.BANKRUPT(data[pName]['name']))
                 pNames.remove(pName)
 
                 pStatus = data[pName]['status']
