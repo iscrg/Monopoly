@@ -11,6 +11,8 @@ class ui(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.setWindowIcon(QtGui.QIcon('img/icon.png'))
+
         # Connect to signals
         self.sgnl = Signals()
         self.sgnl.kapyTextEditSgnl.connect(self.kapyTextEdit)
