@@ -435,7 +435,7 @@ def main():
                                           ru_local.rentScore[propPos]))
 
                 # Changing balance
-                uiCtrl.score.bs(data[pName]['name'],
+                uiCtrl.score.bs(pName,
                                 data[pName]['bs'],
                                 data[pName]['bs'] + costData[propPos])
 
