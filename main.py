@@ -442,7 +442,7 @@ def main():
                 data[pName]['bs'] += costData[propPos]
 
                 # Success message
-                uiCtrl.msg('dev', ru_local.SUCCESSSELL(pName,
+                uiCtrl.msg('dev', ru_local.SUCCESSSELL(data[pName]['name'],
                                                        prop,
                                                        costData[propPos]))
 
@@ -910,7 +910,7 @@ def main():
 
     # Finally...
     uiCtrl.endImg()
-    uiCtrl.msg('dev', ru_local.FINALLY(pNames[0]))
+    uiCtrl.msg('dev', ru_local.FINALLY(data[pNames[0]]['name']))
 
 
 def start():
