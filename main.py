@@ -1,12 +1,6 @@
-'''
-Powered by:
-Popov Ivan (80%)
-Fedyakin Dmitry (70%)
-Fisher Daniil (75%)
-'''
-
 import threading
 import sys
+import os
 import random
 import ru_local
 from PyQt5.QtWidgets import QApplication, QMainWindow
@@ -42,6 +36,7 @@ class ui(QMainWindow):
         self.ui.endImg.setHidden(True)
 
         # Connect to button
+        self.ui.exitButton.triggered.connect(self.exitFunc)
         self.ui.inputLine.returnPressed.connect(self.readValue)
         self.ui.pushButton.clicked.connect(self.readValue)
 
@@ -140,6 +135,9 @@ class ui(QMainWindow):
 
     def endImgHide(self):
         self.ui.endImg.setHidden(False)
+
+    def exitFunc(self):
+        os._exit(os.X_OK)
 
 
 # Adding signals for edit score tables.
@@ -399,7 +397,7 @@ def main():
 
             # Cheking for player bankrupting
             if len(data[pName]['prop']) == 0:
-                uiCtrl.msg('dev', ru_local.BANKRUPT(data[pName]['name']))
+                uiCtrl.msg('dev', ru_local.BANKRUPT(pName))
                 pNames.remove(pName)
 
                 pStatus = data[pName]['status']
@@ -435,14 +433,14 @@ def main():
                                           ru_local.rentScore[propPos]))
 
                 # Changing balance
-                uiCtrl.score.bs(pName,
+                uiCtrl.score.bs(data[pName]['name'],
                                 data[pName]['bs'],
                                 data[pName]['bs'] + costData[propPos])
 
                 data[pName]['bs'] += costData[propPos]
 
                 # Success message
-                uiCtrl.msg('dev', ru_local.SUCCESSSELL(data[pName]['name'],
+                uiCtrl.msg('dev', ru_local.SUCCESSSELL(pName,
                                                        prop,
                                                        costData[propPos]))
 
@@ -910,12 +908,13 @@ def main():
 
     # Finally...
     uiCtrl.endImg()
-    uiCtrl.msg('dev', ru_local.FINALLY(data[pNames[0]]['name']))
+    uiCtrl.msg('dev', ru_local.FINALLY(pNames[0]))
 
 
 def start():
     global ex
     global dataReadyEvent
+    global trd
 
     app = QApplication(sys.argv)
     ex = ui()
@@ -926,6 +925,7 @@ def start():
     trd.start()
 
     app.exec_()
+    sys.exit(app.exec())
 
 
 if __name__ == '__main__':

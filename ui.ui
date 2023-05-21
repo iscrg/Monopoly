@@ -405,7 +405,19 @@ p, li { white-space: pre-wrap; }
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuButton">
+    <property name="title">
+     <string>Меню</string>
+    </property>
+    <addaction name="exitButton"/>
+   </widget>
+   <addaction name="menuButton"/>
   </widget>
+  <action name="exitButton">
+   <property name="text">
+    <string>Выход</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
